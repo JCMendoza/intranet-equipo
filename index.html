@@ -439,7 +439,7 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
       <div class="tabs">
         <button class="tab active" onclick="switchTab('notas',this)">Notas</button>
         <button class="tab" onclick="switchTab('galeria',this)">Galería</button>
-        <button class="tab" id="tab-lider" style="display:none" onclick="switchTab('lider',this)">👑 Panel líder</button>
+        <button class="tab" id="tab-lider" style="display:none" onclick="switchTab('lider',this)">⬡ Panel líder</button>
       </div>
       <div class="profile-wrap">
         <button class="profile-btn" id="profile-btn" onclick="toggleProfile()">?</button>
@@ -581,10 +581,10 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 </div>
 
 <!-- MODAL NOTA FORM -->
-<div class="overlay" id="note-modal" style="display:none" onclick="if(event.target===this)closeNoteForm()">
-  <div class="modal"><div class="modal-header"><h2 id="note-modal-title">Nueva nota</h2><button class="close-btn" onclick="closeNoteForm()">✕</button></div>
+<div class="overlay" id="note-modal" style="display:none" onclick="confirmCloseNoteForm(event)">
+  <div class="modal"><div class="modal-header"><h2 id="note-modal-title">Nueva nota</h2><button class="close-btn" onclick="confirmCloseNoteForm(null)">✕</button></div>
   <div class="modal-body">
-    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="note-title" placeholder="Título de la nota"></div>
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="note-title" placeholder="Título de la nota" oninput="this.value=this.value.toUpperCase()"></div>
     <div class="form-row">
       <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="note-cat"></select></div>
       <div class="form-group"><label class="form-label">Estado</label><select class="form-input" id="note-status"></select></div>
@@ -606,7 +606,7 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
     </div>
     <div class="checkbox-row"><input type="checkbox" id="note-pin"><label for="note-pin">📌 Fijar esta nota arriba</label></div>
   </div>
-  <div class="modal-footer"><button class="btn-secondary" onclick="closeNoteForm()">Cancelar</button><button class="btn-primary" onclick="saveNote()">Guardar</button></div></div>
+  <div class="modal-footer"><button class="btn-secondary" onclick="confirmCloseNoteForm(null)">Cancelar</button><button class="btn-primary" onclick="saveNote()">Guardar</button></div></div>
 </div>
 
 <!-- MODAL NOTA DETALLE -->
@@ -1282,6 +1282,18 @@ function editNote(id){
   document.getElementById('tag-input').value='';renderTagsList();renderLinksList();
   document.getElementById('note-modal').style.display='flex';
 }
+function noteFormHasContent(){
+  const title=document.getElementById('note-title').value.trim();
+  const body=document.getElementById('note-body').value.trim();
+  return title||body||currentTags.length||currentLinks.length;
+}
+function confirmCloseNoteForm(event){
+  if(event&&event.target!==document.getElementById('note-modal'))return;
+  if(noteFormHasContent()){
+    if(!confirm('¿Querés salir? El contenido que escribiste se va a perder.'))return;
+  }
+  closeNoteForm();
+}
 function closeNoteForm(){document.getElementById('note-modal').style.display='none'}
 function handleTagKey(e){if(e.key==='Enter'){e.preventDefault();addTag()}}
 function addTag(){const input=document.getElementById('tag-input');const val=input.value.trim().toLowerCase();if(!val||currentTags.includes(val))return;currentTags.push(val);input.value='';renderTagsList()}
@@ -1514,7 +1526,8 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
-    ['ann-modal','ann-form-modal','note-modal','note-detail-modal','gallery-form-modal','gallery-edit-modal','fav-modal','hist-modal']
+    if(document.getElementById('note-modal').style.display!=='none'){confirmCloseNoteForm(null);return;}
+    ['ann-modal','ann-form-modal','note-detail-modal','gallery-form-modal','gallery-edit-modal','fav-modal','hist-modal']
       .forEach(id=>document.getElementById(id).style.display='none');
     closeLightbox();
     document.getElementById('bell-panel').classList.remove('open');
