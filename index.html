@@ -523,23 +523,8 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
     </div>
 
     <div class="leader-section">
-      <div class="leader-section-title">
-        👥 Usuarios del equipo
-        <button class="btn-xs primary" onclick="toggleAddUserForm()">+ Agregar usuario</button>
-      </div>
-      <div class="add-user-form" id="add-user-form" style="display:none">
-        <div class="add-user-form-title">Nuevo usuario del equipo</div>
-        <div class="add-user-row">
-          <input id="new-user-name" placeholder="Nombre completo" type="text">
-          <input id="new-user-email" placeholder="Email" type="email">
-          <select id="new-user-role" style="padding:8px 10px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)">
-            <option value="colaborador">Colaborador</option>
-            <option value="lider">Líder</option>
-          </select>
-          <button class="btn-xs success" onclick="addTeamUser()">Agregar</button>
-          <button class="btn-xs" onclick="toggleAddUserForm()">Cancelar</button>
-        </div>
-      </div>
+      <div class="leader-section-title">👥 Usuarios del equipo</div>
+      <p style="font-size:12px;color:var(--text4);margin-bottom:12px">Los usuarios aparecen automáticamente la primera vez que inician sesión.</p>
       <div id="leader-users"><div class="loading">Cargando usuarios…</div></div>
     </div>
 
@@ -803,20 +788,25 @@ function saveNotifList(){lsSave('intranet_notifs_list_'+currentEmail,notificatio
 function setupFirebase(){
   const db=window._db,ref=window._ref;
 
-  // 1. Load team users & roles first
+  // 1. Auto-register current user on login, then load all team users
+  const myKey=btoa(currentEmail);
+  // read once to check if already registered
+  window._onValue(ref(db,'team_users/'+myKey), snap=>{
+    if(!snap.val()){
+      // first login — register automatically
+      const defaultRole=currentEmail===INITIAL_LIDER?'lider':'colaborador';
+      window._set(ref(db,'team_users/'+myKey),{email:currentEmail,name:currentUser,role:defaultRole,joinedAt:today()});
+    }
+  },{onlyOnce:true});
+
   window._onValue(ref(db,'team_users'),s=>{
     teamUsers=s.val()||{};
-    // auto-register initial lider if not present
-    const liderKey=btoa(INITIAL_LIDER);
-    if(!teamUsers[liderKey]){
-      window._set(ref(db,'team_users/'+liderKey),{email:INITIAL_LIDER,name:currentEmail===INITIAL_LIDER?currentUser:'Juan Mendoza',role:'lider',addedAt:today()});
-    }
     // check my role
-    const myKey=btoa(currentEmail);
     const myRole=teamUsers[myKey]?.role||(currentEmail===INITIAL_LIDER?'lider':'colaborador');
     isLider=myRole==='lider';
     updateRoleUI();
     renderUsersPanel();
+    updateAuthorFilter(); // refresh author filter with real team names
   });
 
   // 2. Notes — use a flag to skip notifications on initial load
@@ -1041,8 +1031,12 @@ function setView(mode){
 function updateAuthorFilter(){
   const sel=document.getElementById('filter-author');
   const cur=sel.value;
-  const authors=[...new Set(Object.values(notes||{}).map(n=>n.author).filter(Boolean))].sort();
-  sel.innerHTML='<option value="">Todos los autores</option>'+authors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
+  // use team users list from Firebase, fallback to note authors
+  const teamNames=Object.values(teamUsers||{}).map(u=>u.name).filter(Boolean).sort();
+  const noteAuthors=[...new Set(Object.values(notes||{}).map(n=>n.author).filter(Boolean))].sort();
+  // merge both, team names first
+  const allAuthors=[...new Set([...teamNames,...noteAuthors])].sort();
+  sel.innerHTML='<option value="">Todos los autores</option>'+allAuthors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
   if(cur)sel.value=cur;
 }
 
@@ -1430,39 +1424,12 @@ function renderLeaderPanel(){
 // ═══════════════════════════════════════
 //  USERS PANEL — solo equipo cargado manualmente
 // ═══════════════════════════════════════
-function toggleAddUserForm(){
-  const el=document.getElementById('add-user-form');
-  el.style.display=el.style.display==='none'?'block':'none';
-  if(el.style.display==='block'){
-    document.getElementById('new-user-name').value='';
-    document.getElementById('new-user-email').value='';
-  }
-}
-
-function addTeamUser(){
-  const name=document.getElementById('new-user-name').value.trim();
-  const email=document.getElementById('new-user-email').value.trim().toLowerCase();
-  const role=document.getElementById('new-user-role').value;
-  if(!name||!email){showToast('⚠️ Completá nombre y email');return}
-  if(!email.includes('@')){showToast('⚠️ Email inválido');return}
-  const key=btoa(email);
-  if(teamUsers[key]){showToast('⚠️ Este usuario ya existe');return}
-  const newUser={email,name,role,addedAt:today()};
-  teamUsers[key]=newUser;
-  dbSet('team_users/'+key,newUser);
-  logActivity('Agregó usuario al equipo',`${name} (${email})`);
-  addMyHistory('👥',`Agregaste a ${name} al equipo`);
-  toggleAddUserForm();
-  renderUsersPanel();
-  showToast(`${name} agregado al equipo ✓`);
-}
-
 function renderUsersPanel(){
   const el=document.getElementById('leader-users');
   const now=nowTS();
-  const users=Object.values(teamUsers||{}).sort((a,b)=>a.name.localeCompare(b.name));
+  const users=Object.values(teamUsers||{}).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
   if(!users.length){
-    el.innerHTML='<p style="font-size:13px;color:var(--text4);padding:.5rem 0">Aún no hay usuarios. Hacé clic en "+ Agregar usuario" para empezar.</p>';
+    el.innerHTML='<p style="font-size:13px;color:var(--text4);padding:.5rem 0">Aún no hay usuarios. Aparecerán automáticamente cuando cada colaborador inicie sesión por primera vez.</p>';
     return;
   }
   el.innerHTML=users.map(u=>{
@@ -1479,7 +1446,6 @@ function renderUsersPanel(){
         <option value="colaborador"${u.role==='colaborador'?' selected':''}>Colaborador</option>
         <option value="lider"${u.role==='lider'?' selected':''}>Líder</option>
       </select>
-      ${!isMe?`<button class="btn-xs danger" onclick="removeTeamUser('${esc(u.email)}','${esc(u.name)}')" title="Eliminar del equipo">✕</button>`:''}
     </div>`;
   }).join('');
 }
@@ -1493,15 +1459,6 @@ function changeUserRole(email,name,newRole){
   showToast(`Rol de ${name} → ${newRole} ✓`);
 }
 
-function removeTeamUser(email,name){
-  if(!confirm(`¿Eliminás a ${name} del equipo? Seguirá pudiendo entrar hasta que desactives su cuenta en Firebase.`))return;
-  const key=btoa(email);
-  delete teamUsers[key];
-  dbRemove('team_users/'+key);
-  logActivity('Eliminó usuario del equipo',name);
-  renderUsersPanel();
-  showToast(`${name} eliminado del equipo`);
-}
 
 function renderLeaderActivity(activityData){
   if(!isLider)return;
