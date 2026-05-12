@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base de conocimiento — Atención al cliente</title>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, set, onValue, remove, onDisconnect } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 🔧 PEGÁ TU CONFIGURACIÓN DE FIREBASE AQUÍ
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const firebaseConfig = {
+  apiKey: "AIzaSyA6AdNpK9nZ0wBr764RWHB7ufpsDkNOir4",
+  authDomain: "intranet-atencion-cliente.firebaseapp.com",
+  databaseURL: "https://intranet-atencion-cliente-default-rtdb.firebaseio.com",
+  projectId: "intranet-atencion-cliente",
+  storageBucket: "intranet-atencion-cliente.firebasestorage.app",
+  messagingSenderId: "734398211250",
+  appId: "1:734398211250:web:af2e07630b2819dc7f15ab",
+  measurementId: "G-90EZBCGZRQ"
+};
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  const app  = initializeApp(firebaseConfig);
+  const db   = getDatabase(app);
+  const auth = getAuth(app);
+  window._db=db; window._auth=auth; window._ref=ref; window._set=set;
+  window._onValue=onValue; window._remove=remove; window._onDisconnect=onDisconnect;
+  window._signInWithEmailAndPassword=signInWithEmailAndPassword;
+  window._signOut=signOut; window._onAuthStateChanged=onAuthStateChanged;
+  window._firebaseReady=true;
+  window.dispatchEvent(new Event('firebase-ready'));
+</script>
+
+<style>
+/* ══════════ TOKENS ══════════ */
+:root{
+  --bg:#f5f4f0;--bg2:#eceae4;--bg3:#e2e0d8;--surface:#ffffff;
+  --border:#e2e0d8;--border2:#d0cec7;
+  --text:#1a1a18;--text2:#4a4a48;--text3:#6b6a65;--text4:#9a9893;
+  --blue-bg:#E6F1FB;--blue:#185FA5;--blue-mid:#378ADD;--blue-bdr:#B5D4F4;
+  --green-bg:#E1F5EE;--green:#0F6E56;
+  --amber-bg:#FAEEDA;--amber:#854F0B;
+  --gray-bg:#F1EFE8;--gray:#5F5E5A;
+  --red-bg:#FCEBEB;--red:#A32D2D;
+  --gold:#E9A817;--gold-bg:#FFFDF5;--gold-bdr:#FAC775;
+  --online:#3DBE7A;
+  --shadow:0 2px 12px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 40px rgba(0,0,0,.15);
+}
+[data-theme="dark"]{
+  --bg:#18181A;--bg2:#222225;--bg3:#2a2a2e;--surface:#1e1e21;
+  --border:#2e2e33;--border2:#3a3a40;
+  --text:#f0efe9;--text2:#c8c7c1;--text3:#9a9893;--text4:#6b6a65;
+  --blue-bg:#0d2035;--blue:#6ab3f5;--blue-mid:#4a96e0;--blue-bdr:#1e4a7a;
+  --green-bg:#0a2018;--green:#4ade80;
+  --amber-bg:#251a08;--amber:#fbbf24;
+  --gray-bg:#222220;--gray:#9a9893;
+  --red-bg:#2a1010;--red:#f87171;
+  --gold-bg:#201a08;--gold-bdr:#78610a;
+  --shadow:0 2px 12px rgba(0,0,0,.3);
+  --shadow-lg:0 8px 40px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s}
+
+/* ══════════ LOGIN ══════════ */
+#login-screen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem}
+.login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:400px;max-width:100%;box-shadow:var(--shadow-lg)}
+.login-logo{text-align:center;font-size:44px;margin-bottom:1rem}
+.login-card h1{font-size:21px;font-weight:600;text-align:center;margin-bottom:6px}
+.login-sub{font-size:13px;color:var(--text3);text-align:center;margin-bottom:2rem}
+.login-field{margin-bottom:14px}
+.login-label{font-size:12px;font-weight:500;color:var(--text3);margin-bottom:5px;display:block}
+.login-input{width:100%;padding:12px 14px;border:1px solid var(--border2);border-radius:10px;font-size:14px;font-family:inherit;background:var(--bg);color:var(--text)}
+.login-input:focus{outline:none;border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
+.login-btn{width:100%;padding:13px;background:var(--text);color:var(--surface);border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;margin-top:6px}
+.login-btn:hover{opacity:.86}.login-btn:disabled{opacity:.5;cursor:not-allowed}
+.login-error{background:var(--red-bg);color:var(--red);border:1px solid #F7C1C1;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:14px;display:none}
+.login-footer{text-align:center;font-size:12px;color:var(--text4);margin-top:1.25rem}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;vertical-align:middle}
+
+/* ══════════ LAYOUT ══════════ */
+.app{max-width:1020px;margin:0 auto;padding:1.5rem 1rem}
+
+/* ══════════ HEADER ══════════ */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
+.header-left h1{font-size:20px;font-weight:600}
+.header-left p{font-size:13px;color:var(--text3);margin-top:2px}
+.header-right{display:flex;align-items:center;gap:8px}
+
+/* ══════════ TABS ══════════ */
+.tabs{display:flex;gap:4px;background:var(--bg2);padding:4px;border-radius:10px}
+.tab{padding:7px 16px;font-size:13px;border:none;background:none;cursor:pointer;border-radius:8px;color:var(--text3);font-family:inherit;transition:all .15s;white-space:nowrap}
+.tab.active{background:var(--surface);color:var(--text);font-weight:500;box-shadow:var(--shadow)}
+.section{display:none}.section.active{display:block}
+
+/* ══════════ BELL ══════════ */
+.bell-wrap{position:relative}
+.bell-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:16px;position:relative}
+.bell-btn:hover{background:var(--bg3)}
+.bell-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--surface);display:none}
+.bell-dot.show{display:block}
+.bell-panel{position:absolute;top:44px;right:0;width:320px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);z-index:150;display:none;max-height:400px;overflow-y:auto}
+.bell-panel.open{display:block}
+.bell-header{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.bell-header span{font-size:13px;font-weight:600}
+.bell-clear{font-size:11px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:inherit}
+.bell-clear:hover{color:var(--text)}
+.bell-item{padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px;line-height:1.5}
+.bell-item:last-child{border-bottom:none}
+.bell-item.unread{background:var(--blue-bg)}
+.bell-item-time{font-size:11px;color:var(--text4);margin-top:3px}
+.bell-empty{padding:2rem;text-align:center;font-size:13px;color:var(--text4)}
+
+/* ══════════ PROFILE MENU ══════════ */
+.profile-wrap{position:relative}
+.profile-btn{width:36px;height:36px;background:var(--blue-mid);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;font-family:inherit;flex-shrink:0}
+.profile-btn:hover{opacity:.88}
+.profile-panel{position:absolute;top:44px;right:0;width:240px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);z-index:150;display:none;overflow:hidden}
+.profile-panel.open{display:block}
+.profile-info{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.profile-info-name{font-size:14px;font-weight:600}
+.profile-info-email{font-size:11px;color:var(--text4);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-info-role{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;margin-top:6px;letter-spacing:.3px}
+.role-lider{background:var(--blue-bg);color:var(--blue)}
+.role-colab{background:var(--gray-bg);color:var(--gray)}
+.profile-menu-item{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:13px;cursor:pointer;color:var(--text2);border:none;background:none;width:100%;font-family:inherit;text-align:left}
+.profile-menu-item:hover{background:var(--bg2);color:var(--text)}
+.profile-menu-item.danger:hover{background:var(--red-bg);color:var(--red)}
+.profile-menu-item .menu-icon{font-size:16px;width:20px;text-align:center}
+.profile-divider{height:1px;background:var(--border);margin:4px 0}
+
+/* ══════════ THEME BTN ══════════ */
+.theme-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:16px}
+.theme-btn:hover{background:var(--bg3)}
+
+/* ══════════ PRESENCE ══════════ */
+.presence-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.presence-label{font-size:12px;color:var(--text3);font-weight:500;white-space:nowrap}
+.presence-chips{display:flex;flex-wrap:wrap;gap:6px;flex:1}
+.presence-chip{display:inline-flex;align-items:center;gap:5px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:4px 10px;font-size:12px;color:var(--text2)}
+.presence-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.presence-dot.active{background:var(--online)}
+.presence-dot.me{background:var(--blue-mid)}
+.presence-empty{font-size:12px;color:var(--text4);font-style:italic}
+
+/* ══════════ ANN BAR ══════════ */
+.ann-bar{background:var(--blue-bg);border:1px solid var(--blue-bdr);border-radius:10px;padding:11px 16px;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:opacity .15s}
+.ann-bar:hover{opacity:.85}
+.ann-bar-left{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--blue);font-weight:500}
+.ann-badge{font-size:11px;background:var(--blue-mid);color:#fff;padding:3px 10px;border-radius:20px;font-weight:500}
+
+/* ══════════ PENDING BANNER ══════════ */
+.pending-banner{background:var(--amber-bg);border:1px solid var(--gold-bdr);border-radius:10px;padding:10px 16px;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.pending-banner-text{font-size:13px;color:var(--amber);font-weight:500}
+.pending-count{background:var(--amber);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
+
+/* ══════════ GLOBAL SEARCH ══════════ */
+.global-search-wrap{position:relative;margin-bottom:1rem}
+.global-search{width:100%;padding:10px 16px 10px 40px;border:1px solid var(--border2);border-radius:12px;font-size:14px;background:var(--surface);color:var(--text);font-family:inherit}
+.global-search:focus{outline:none;border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
+.global-search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.global-results{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-top:6px;box-shadow:var(--shadow-lg);display:none;overflow:hidden}
+.global-results.show{display:block}
+.global-result-item{padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;display:flex;align-items:center;gap:10px}
+.global-result-item:last-child{border-bottom:none}
+.global-result-item:hover{background:var(--bg2)}
+.global-result-icon{font-size:16px;flex-shrink:0}
+.global-result-text{flex:1;min-width:0}
+.global-result-title{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.global-result-sub{font-size:11px;color:var(--text4)}
+.global-result-empty{padding:1.5rem;text-align:center;font-size:13px;color:var(--text4)}
+
+/* ══════════ TOOLBAR ══════════ */
+.toolbar{display:flex;gap:8px;margin-bottom:.75rem;flex-wrap:wrap;align-items:center}
+.search-box{flex:1;min-width:160px;padding:9px 14px;border:1px solid var(--border2);border-radius:10px;font-size:13px;background:var(--surface);color:var(--text);font-family:inherit}
+.search-box:focus{outline:none;border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
+.add-btn{padding:9px 18px;background:var(--text);color:var(--surface);border:none;border-radius:10px;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;font-weight:500}
+.add-btn:hover{opacity:.86}
+.export-btn,.view-btn{padding:9px 12px;background:none;color:var(--text3);border:1px solid var(--border2);border-radius:10px;font-size:13px;cursor:pointer;font-family:inherit}
+.export-btn:hover,.view-btn:hover{background:var(--bg2);color:var(--text)}
+.view-btn.active{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bdr)}
+
+/* ══════════ FILTERS ══════════ */
+.filters-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.cat-filter{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.cat-pill{padding:5px 14px;font-size:12px;border:1px solid var(--border2);border-radius:20px;cursor:pointer;background:none;color:var(--text3);font-family:inherit;transition:all .15s}
+.cat-pill.active{border-color:var(--blue-mid);color:var(--blue);background:var(--blue-bg)}
+.cat-pill:hover:not(.active){background:var(--bg2)}
+.filter-select{padding:6px 10px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text);cursor:pointer}
+.filter-select:focus{outline:none;border-color:var(--blue-mid)}
+
+/* ══════════ NOTES ══════════ */
+.notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.note-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.15rem;transition:box-shadow .15s,border-color .15s;position:relative;cursor:pointer}
+.note-card:hover{box-shadow:var(--shadow);border-color:var(--border2)}
+.note-card.pinned{border-color:var(--gold-bdr);background:var(--gold-bg)}
+.note-card.is-new::before{content:'Nuevo';position:absolute;top:10px;right:10px;font-size:10px;font-weight:600;background:var(--green-bg);color:var(--green);padding:2px 8px;border-radius:20px}
+.note-card.favorited{box-shadow:0 0 0 2px var(--gold)}
+.pin-icon{position:absolute;top:10px;right:10px;font-size:13px;opacity:.2}
+.note-card.pinned .pin-icon{opacity:1;color:var(--gold)}
+.note-cat-badge{display:inline-block;font-size:10px;padding:3px 9px;border-radius:20px;font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+.status-badge{display:inline-flex;font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;margin-left:5px;vertical-align:middle}
+.status-vigente{background:var(--green-bg);color:var(--green)}
+.status-revision{background:var(--amber-bg);color:var(--amber)}
+.status-obsoleto{background:var(--gray-bg);color:var(--gray)}
+.status-pendiente{background:var(--blue-bg);color:var(--blue)}
+.note-card h3{font-size:14px;font-weight:600;margin-bottom:5px;line-height:1.4;padding-right:28px}
+.note-preview{font-size:13px;color:var(--text2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.note-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.tag-chip{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--bg2);color:var(--text3);border:1px solid var(--border)}
+.note-footer{margin-top:10px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);padding-top:8px;flex-wrap:wrap;gap:4px}
+.note-author{font-size:11px;color:var(--text4)}
+.note-stats{display:flex;gap:8px;font-size:11px;color:var(--text4)}
+.note-card-actions{display:flex;gap:3px}
+.icon-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:none;background:none;cursor:pointer;border-radius:7px;font-size:13px;color:var(--text3)}
+.icon-btn:hover{background:var(--bg2)}
+.icon-btn.delete:hover{background:var(--red-bg);color:var(--red)}
+.icon-btn.fav-active{color:var(--gold)}
+.empty-state{text-align:center;padding:3.5rem 1rem;color:var(--text4);font-size:14px;grid-column:1/-1}
+.loading{text-align:center;padding:3rem;color:var(--text4);font-size:14px;grid-column:1/-1}
+
+/* ══════════ LIST VIEW ══════════ */
+.notes-list{display:flex;flex-direction:column;gap:6px}
+.note-list-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .15s}
+.note-list-item:hover{box-shadow:var(--shadow);border-color:var(--border2)}
+.note-list-item.pinned{border-color:var(--gold-bdr);background:var(--gold-bg)}
+.note-list-title{font-size:14px;font-weight:500;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.note-list-meta{font-size:11px;color:var(--text4);white-space:nowrap;flex-shrink:0}
+
+/* ══════════ MODALS ══════════ */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal{background:var(--surface);border-radius:16px;border:1px solid var(--border);width:520px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);display:flex;flex-direction:column}
+.modal.wide{width:720px}
+.modal-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-header h2{font-size:16px;font-weight:600}
+.modal-body{padding:1.25rem;flex:1}
+.modal-footer{padding:.9rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:var(--surface)}
+.close-btn{background:none;border:none;cursor:pointer;font-size:18px;color:var(--text3);padding:4px 8px;border-radius:6px;line-height:1}
+.close-btn:hover{background:var(--bg2);color:var(--text)}
+
+/* ══════════ BUTTONS ══════════ */
+.btn-primary{padding:9px 20px;background:var(--text);color:var(--surface);border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:500}
+.btn-primary:hover{opacity:.86}
+.btn-secondary{padding:9px 20px;background:none;border:1px solid var(--border2);border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--text)}
+.btn-secondary:hover{background:var(--bg2)}
+.btn-success{padding:9px 20px;background:#0F6E56;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn-success:hover{opacity:.86}
+.btn-xs{padding:4px 12px;font-size:12px;border:1px solid var(--border2);background:none;border-radius:6px;cursor:pointer;color:var(--text3);font-family:inherit}
+.btn-xs:hover{background:var(--bg2)}
+.btn-xs.primary{background:var(--text);color:var(--surface);border-color:var(--text)}
+.btn-xs.success{background:#0F6E56;color:#fff;border-color:#0F6E56}
+.btn-xs.danger:hover{background:var(--red-bg);color:var(--red);border-color:var(--red)}
+
+/* ══════════ FORMS ══════════ */
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--text3);margin-bottom:5px;display:block;font-weight:500}
+.form-input{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)}
+.form-input:focus{outline:none;border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
+textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tags-input-wrap{display:flex;gap:6px}
+.tags-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tag-removable{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--bg2);color:var(--text3);border:1px solid var(--border);display:flex;align-items:center;gap:4px}
+.tag-removable button{background:none;border:none;cursor:pointer;font-size:12px;color:var(--text4);line-height:1;padding:0}
+.checkbox-row{display:flex;align-items:center;gap:8px;margin-top:4px}
+.checkbox-row input{width:16px;height:16px;cursor:pointer;accent-color:var(--blue-mid)}
+.checkbox-row label{font-size:13px;color:var(--text2);cursor:pointer}
+.links-list{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.link-row{display:flex;gap:6px;align-items:center}
+.link-row input{flex:1;padding:7px 10px;border:1px solid var(--border2);border-radius:7px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text)}
+.link-row input:focus{outline:none;border-color:var(--blue-mid)}
+
+/* ══════════ NOTE DETAIL ══════════ */
+.note-detail-title{font-size:20px;font-weight:600;margin:10px 0 8px;line-height:1.35}
+.note-detail-meta{font-size:12px;color:var(--text4);margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.note-detail-body{font-size:14px;color:var(--text2);line-height:1.8;white-space:pre-line;border-top:1px solid var(--border);padding-top:16px}
+.note-detail-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)}
+.note-links{margin-top:14px;padding-top:12px;border-top:1px solid var(--border)}
+.note-links-title{font-size:12px;font-weight:600;color:var(--text3);margin-bottom:8px}
+.note-link-item a{color:var(--blue);text-decoration:none;font-size:13px}
+.note-link-item a:hover{text-decoration:underline}
+.vote-row{display:flex;align-items:center;gap:10px;margin-top:16px;padding-top:12px;border-top:1px solid var(--border)}
+.vote-btn{display:flex;align-items:center;gap:5px;padding:7px 16px;border:1px solid var(--border2);border-radius:20px;background:none;cursor:pointer;font-size:13px;font-family:inherit;color:var(--text2);transition:all .15s}
+.vote-btn:hover,.vote-btn.voted{background:var(--blue-bg);border-color:var(--blue-mid);color:var(--blue);font-weight:600}
+.approval-bar{background:var(--amber-bg);border:1px solid var(--gold-bdr);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.approval-bar-text{font-size:13px;color:var(--amber);font-weight:500}
+.comments-section{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.comments-title{font-size:13px;font-weight:600;margin-bottom:12px;color:var(--text3)}
+.comment{background:var(--bg);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.comment-author{font-size:12px;font-weight:600;margin-bottom:3px;color:var(--text)}
+.comment-text{font-size:13px;color:var(--text2);line-height:1.5}
+.comment-meta{font-size:11px;color:var(--text4);margin-top:4px;display:flex;justify-content:space-between}
+.comment-del{background:none;border:none;cursor:pointer;font-size:11px;color:var(--text4)}
+.comment-del:hover{color:var(--red)}
+.comment-input-wrap{display:flex;gap:8px;margin-top:12px}
+.comment-input{flex:1;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:inherit;resize:none;background:var(--surface);color:var(--text)}
+.comment-input:focus{outline:none;border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
+.history-section{margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
+.history-title{font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;margin-bottom:8px}
+.history-list{font-size:12px;color:var(--text4)}
+.history-entry{padding:4px 0;border-bottom:1px solid var(--border);display:flex;gap:8px}
+.history-entry:last-child{border-bottom:none}
+.history-who{font-weight:600;color:var(--text3);min-width:100px}
+
+/* ══════════ ANNOUNCEMENTS ══════════ */
+.ann-item{padding:14px 0;border-bottom:1px solid var(--border)}
+.ann-item:last-child{border-bottom:none}
+.ann-item h3{font-size:14px;font-weight:600;margin-bottom:5px}
+.ann-item p{font-size:13px;color:var(--text2);line-height:1.6;white-space:pre-line}
+.ann-meta{font-size:11px;color:var(--text4);margin-top:6px}
+.ann-actions{display:flex;gap:6px;margin-top:8px}
+
+/* ══════════ PANEL LÍDER ══════════ */
+.leader-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:1.5rem}
+.leader-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
+.leader-stat-num{font-size:32px;font-weight:700;margin-bottom:4px}
+.leader-stat-label{font-size:12px;color:var(--text3)}
+.leader-section-title{font-size:14px;font-weight:600;margin-bottom:10px;margin-top:1.5rem;color:var(--text2);display:flex;align-items:center;gap:8px}
+.leader-pending-item{background:var(--surface);border:1px solid var(--gold-bdr);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.leader-pending-title{font-size:13px;font-weight:500}
+.leader-pending-meta{font-size:11px;color:var(--text4);margin-top:2px}
+.leader-activity-item{padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;font-size:13px}
+.leader-activity-item:last-child{border-bottom:none}
+.leader-activity-who{font-weight:600;min-width:100px;flex-shrink:0;color:var(--text)}
+.leader-activity-text{color:var(--text2);flex:1}
+.leader-activity-time{font-size:11px;color:var(--text4);white-space:nowrap}
+
+/* ══════════ USERS MANAGEMENT ══════════ */
+.user-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.user-row:last-child{border-bottom:none}
+.user-avatar{width:36px;height:36px;background:var(--blue-mid);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-info-name{font-size:13px;font-weight:600}
+.user-info-email{font-size:11px;color:var(--text4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.user-online-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.user-online-dot.online{background:var(--online)}
+.user-online-dot.offline{background:var(--border2)}
+.role-select{padding:5px 10px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text);cursor:pointer}
+.role-select:focus{outline:none;border-color:var(--blue-mid)}
+
+/* ══════════ GALLERY ══════════ */
+.gallery-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
+.gallery-item{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;position:relative;cursor:pointer;transition:box-shadow .15s,transform .15s}
+.gallery-item:hover{box-shadow:var(--shadow);transform:translateY(-2px)}
+.gallery-thumb{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.gallery-info{padding:10px 12px;background:var(--surface)}
+.gallery-info-title{font-size:13px;font-weight:600;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gallery-info-desc{font-size:11px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gallery-info-meta{font-size:10px;color:var(--text4);margin-top:4px;display:flex;justify-content:space-between}
+.gallery-item-actions{position:absolute;top:8px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.gallery-item:hover .gallery-item-actions{opacity:1}
+.gallery-action-btn{width:28px;height:28px;background:rgba(0,0,0,.55);border:none;border-radius:8px;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.gallery-cat-badge{position:absolute;top:8px;left:8px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;text-transform:uppercase}
+.upload-zone{border:2px dashed var(--border2);border-radius:12px;padding:2.5rem;text-align:center;cursor:pointer;color:var(--text3);font-size:14px;background:var(--bg);transition:all .15s;margin-bottom:14px}
+.upload-zone:hover{border-color:var(--blue-mid);color:var(--blue);background:var(--blue-bg)}
+.file-input{display:none}
+
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem}
+.lightbox-img{max-width:90vw;max-height:72vh;object-fit:contain;border-radius:10px}
+.lightbox-info{margin-top:14px;text-align:center}
+.lightbox-title{font-size:16px;font-weight:600;color:#fff;margin-bottom:4px}
+.lightbox-desc{font-size:13px;color:rgba(255,255,255,.7)}
+.lightbox-close{position:absolute;top:16px;right:16px;width:36px;height:36px;background:rgba(255,255,255,.12);border:none;border-radius:50%;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lightbox-close:hover{background:rgba(255,255,255,.22)}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;background:rgba(255,255,255,.12);border:none;border-radius:50%;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.lightbox-prev{left:16px}.lightbox-next{right:16px}
+.lightbox-nav:hover{background:rgba(255,255,255,.22)}
+
+/* ══════════ PROFILE SECTIONS ══════════ */
+.section-title{font-size:16px;font-weight:600;margin-bottom:1rem}
+.my-history-item{padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
+.my-history-item:last-child{border-bottom:none}
+.my-history-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.my-history-text{flex:1;font-size:13px;color:var(--text2);line-height:1.5}
+.my-history-time{font-size:11px;color:var(--text4);margin-top:2px}
+
+/* ══════════ TOAST ══════════ */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--surface);font-size:13px;padding:10px 20px;border-radius:30px;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-lg)}
+.toast.show{opacity:1}
+
+@media(max-width:640px){.form-row{grid-template-columns:1fr}.modal.wide{width:100%}.tabs{overflow-x:auto}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">📋</div>
+    <h1>Base de conocimiento</h1>
+    <p class="login-sub">Atención al cliente — Ingresá con tu usuario</p>
+    <div class="login-error" id="login-error"></div>
+    <div class="login-field"><label class="login-label">Email</label>
+      <input class="login-input" id="login-email" type="email" placeholder="tu@email.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <div class="login-field"><label class="login-label">Contraseña</label>
+      <input class="login-input" id="login-password" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+    <button class="login-btn" id="login-btn" onclick="doLogin()">Ingresar</button>
+    <p class="login-footer">¿Olvidaste tu contraseña? Contactá al líder del equipo.</p>
+  </div>
+</div>
+
+<!-- APP -->
+<div class="app" id="main-app" style="display:none">
+  <div class="header">
+    <div class="header-left">
+      <h1>📋 Base de conocimiento</h1>
+      <p>Atención al cliente</p>
+    </div>
+    <div class="header-right">
+      <!-- BELL -->
+      <div class="bell-wrap">
+        <button class="bell-btn" onclick="toggleBell()" title="Notificaciones">
+          🔔<span class="bell-dot" id="bell-dot"></span>
+        </button>
+        <div class="bell-panel" id="bell-panel">
+          <div class="bell-header">
+            <span>Notificaciones</span>
+            <button class="bell-clear" onclick="clearNotifs()">Limpiar todo</button>
+          </div>
+          <div id="bell-list"><div class="bell-empty">Sin notificaciones</div></div>
+        </div>
+      </div>
+      <!-- THEME -->
+      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" title="Cambiar modo">🌙</button>
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('notas',this)">Notas</button>
+        <button class="tab" onclick="switchTab('galeria',this)">Galería</button>
+        <button class="tab" id="tab-lider" style="display:none" onclick="switchTab('lider',this)">👑 Panel líder</button>
+      </div>
+      <!-- PROFILE -->
+      <div class="profile-wrap">
+        <button class="profile-btn" id="profile-btn" onclick="toggleProfile()" title="Mi perfil">?</button>
+        <div class="profile-panel" id="profile-panel">
+          <div class="profile-info">
+            <div class="profile-info-name" id="profile-name">—</div>
+            <div class="profile-info-email" id="profile-email">—</div>
+            <span class="profile-info-role" id="profile-role-badge">—</span>
+          </div>
+          <button class="profile-menu-item" onclick="openSection('favoritos')">
+            <span class="menu-icon">⭐</span> Mis favoritos
+          </button>
+          <button class="profile-menu-item" onclick="openSection('historial')">
+            <span class="menu-icon">🕑</span> Mi historial
+          </button>
+          <div class="profile-divider"></div>
+          <button class="profile-menu-item danger" onclick="doLogout()">
+            <span class="menu-icon">🚪</span> Cerrar sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRESENCE -->
+  <div class="presence-bar">
+    <span class="presence-label">🟢 En línea ahora:</span>
+    <div class="presence-chips" id="presence-chips">
+      <span class="presence-empty">Conectando…</span>
+    </div>
+  </div>
+
+  <!-- ANN BAR -->
+  <div class="ann-bar" onclick="openAnn()">
+    <div class="ann-bar-left">📢 <span>Información del equipo</span></div>
+    <span class="ann-badge" id="ann-badge">…</span>
+  </div>
+
+  <!-- PENDING BANNER -->
+  <div class="pending-banner" id="pending-banner" style="display:none">
+    <span class="pending-banner-text">⏳ Hay contenido esperando tu aprobación</span>
+    <span class="pending-count" id="pending-count">0</span>
+  </div>
+
+  <!-- NOTAS -->
+  <div class="section active" id="sec-notas">
+    <div class="global-search-wrap">
+      <span class="global-search-icon">🔍</span>
+      <input class="global-search" type="text" placeholder="Buscar en toda la base de conocimiento…" oninput="globalSearch(this.value)" onblur="setTimeout(()=>hideGlobalResults(),200)">
+      <div class="global-results" id="global-results"></div>
+    </div>
+    <div class="toolbar">
+      <input class="search-box" type="text" placeholder="Filtrar notas…" oninput="renderNotes()" id="search-input">
+      <button class="view-btn" id="view-grid-btn" onclick="setView('grid')" title="Tarjetas">⊞</button>
+      <button class="view-btn" id="view-list-btn" onclick="setView('list')" title="Lista">☰</button>
+      <button class="export-btn" onclick="exportNotes()">⬇ Exportar</button>
+      <button class="add-btn" onclick="openNoteForm()">+ Nueva nota</button>
+    </div>
+    <div class="filters-row">
+      <div class="cat-filter" id="cat-filter"></div>
+      <select class="filter-select" id="filter-status" onchange="renderNotes()">
+        <option value="">Todos los estados</option>
+        <option value="vigente">✅ Vigente</option>
+        <option value="revision">🔄 En revisión</option>
+        <option value="pendiente">⏳ Pendiente</option>
+        <option value="obsoleto">❌ Obsoleto</option>
+      </select>
+      <select class="filter-select" id="filter-author" onchange="renderNotes()">
+        <option value="">Todos los autores</option>
+      </select>
+    </div>
+    <div id="notes-container"><div class="loading">Cargando notas…</div></div>
+  </div>
+
+  <!-- GALERÍA -->
+  <div class="section" id="sec-galeria">
+    <div class="gallery-toolbar">
+      <p style="font-size:13px;color:var(--text3)">Imágenes de referencia del equipo</p>
+      <button class="add-btn" onclick="openGalleryForm()">+ Subir imagen</button>
+    </div>
+    <div class="filters-row"><div class="cat-filter" id="gallery-cat-filter"></div></div>
+    <div class="gallery-grid" id="gallery-grid"><div class="loading">Cargando…</div></div>
+  </div>
+
+  <!-- PANEL LÍDER -->
+  <div class="section" id="sec-lider">
+    <div class="leader-grid" id="leader-stats"></div>
+    <div class="leader-section-title">⏳ Pendientes de aprobación</div>
+    <div id="leader-pending"></div>
+    <div class="leader-section-title">👥 Gestión de usuarios y roles</div>
+    <div id="leader-users"><div class="loading">Cargando usuarios…</div></div>
+    <div class="leader-section-title">📋 Actividad reciente</div>
+    <div id="leader-activity"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" style="display:none" onclick="if(event.target===this)closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">‹</button>
+  <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">›</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="">
+  <div class="lightbox-info">
+    <div class="lightbox-title" id="lightbox-title"></div>
+    <div class="lightbox-desc" id="lightbox-desc"></div>
+  </div>
+</div>
+
+<!-- MODAL FAVORITOS -->
+<div class="overlay" id="fav-modal" style="display:none" onclick="if(event.target===this)closeFav()">
+  <div class="modal wide">
+    <div class="modal-header"><h2>⭐ Mis favoritos</h2><button class="close-btn" onclick="closeFav()">✕</button></div>
+    <div class="modal-body" id="fav-body"></div>
+    <div class="modal-footer"><button class="btn-secondary" onclick="closeFav()">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- MODAL HISTORIAL -->
+<div class="overlay" id="hist-modal" style="display:none" onclick="if(event.target===this)closeHist()">
+  <div class="modal">
+    <div class="modal-header"><h2>🕑 Mi historial</h2><button class="close-btn" onclick="closeHist()">✕</button></div>
+    <div class="modal-body" id="hist-body"></div>
+    <div class="modal-footer"><button class="btn-secondary" onclick="closeHist()">Cerrar</button></div>
+  </div>
+</div>
+
+<!-- MODAL ANUNCIOS -->
+<div class="overlay" id="ann-modal" style="display:none" onclick="if(event.target===this)closeAnn()">
+  <div class="modal">
+    <div class="modal-header"><h2>📢 Información del equipo</h2><button class="close-btn" onclick="closeAnn()">✕</button></div>
+    <div class="modal-body" id="ann-list"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="openAnnForm()">+ Nuevo anuncio</button>
+      <button class="btn-secondary" onclick="closeAnn()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL FORM ANUNCIO -->
+<div class="overlay" id="ann-form-modal" style="display:none" onclick="if(event.target===this)closeAnnForm()">
+  <div class="modal">
+    <div class="modal-header"><h2 id="ann-form-title">Nuevo anuncio</h2><button class="close-btn" onclick="closeAnnForm()">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="ann-title" placeholder="Título"></div>
+      <div class="form-group"><label class="form-label">Contenido</label><textarea class="form-input" id="ann-body" placeholder="Detalle…"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeAnnForm()">Cancelar</button>
+      <button class="btn-primary" onclick="saveAnn()">Publicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOTA FORM -->
+<div class="overlay" id="note-modal" style="display:none" onclick="if(event.target===this)closeNoteForm()">
+  <div class="modal">
+    <div class="modal-header"><h2 id="note-modal-title">Nueva nota</h2><button class="close-btn" onclick="closeNoteForm()">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="note-title" placeholder="Título de la nota"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="note-cat"></select></div>
+        <div class="form-group"><label class="form-label">Estado</label><select class="form-input" id="note-status"></select></div>
+      </div>
+      <div class="form-group"><label class="form-label">Contenido</label>
+        <textarea class="form-input" id="note-body" placeholder="Escribí el contenido…" style="min-height:130px"></textarea></div>
+      <div class="form-group">
+        <label class="form-label">Etiquetas (Enter para agregar)</label>
+        <div class="tags-input-wrap">
+          <input class="form-input" id="tag-input" placeholder="Ej: urgente…" onkeydown="handleTagKey(event)" style="flex:1">
+          <button class="btn-secondary" style="padding:9px 14px" onclick="addTag()">+</button>
+        </div>
+        <div class="tags-list" id="tags-list"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Links útiles</label>
+        <div class="links-list" id="links-list"></div>
+        <button class="btn-xs" style="margin-top:6px" onclick="addLinkRow()">+ Agregar link</button>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="note-pin"><label for="note-pin">📌 Fijar esta nota arriba</label></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeNoteForm()">Cancelar</button>
+      <button class="btn-primary" onclick="saveNote()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NOTA DETALLE -->
+<div class="overlay" id="note-detail-modal" style="display:none" onclick="if(event.target===this)closeDetail()">
+  <div class="modal wide">
+    <div class="modal-header">
+      <h2 style="font-size:13px;color:var(--text3);font-weight:400" id="detail-breadcrumb">Nota</h2>
+      <button class="close-btn" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="modal-body" id="note-detail-body"></div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="editFromDetail()">✏️ Editar</button>
+      <button class="btn-secondary" onclick="closeDetail()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL GALERÍA FORM -->
+<div class="overlay" id="gallery-form-modal" style="display:none" onclick="if(event.target===this)closeGalleryForm()">
+  <div class="modal">
+    <div class="modal-header"><h2>Subir imagen</h2><button class="close-btn" onclick="closeGalleryForm()">✕</button></div>
+    <div class="modal-body">
+      <input type="file" id="gallery-file-input" class="file-input" accept="image/*" onchange="previewGalleryFile(event)">
+      <div class="upload-zone" id="gallery-upload-zone" onclick="document.getElementById('gallery-file-input').click()">
+        <div style="font-size:28px;margin-bottom:8px">🖼️</div>Hacé clic para elegir una imagen</div>
+      <img id="gallery-preview" src="" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:14px;display:none">
+      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="gallery-title" placeholder="Título de la imagen"></div>
+      <div class="form-group"><label class="form-label">Descripción (opcional)</label><input class="form-input" id="gallery-desc" placeholder="Descripción"></div>
+      <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="gallery-cat-select"></select></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeGalleryForm()">Cancelar</button>
+      <button class="btn-primary" onclick="saveGalleryItem()">Subir</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR IMAGEN -->
+<div class="overlay" id="gallery-edit-modal" style="display:none" onclick="if(event.target===this)closeGalleryEdit()">
+  <div class="modal">
+    <div class="modal-header"><h2>Editar imagen</h2><button class="close-btn" onclick="closeGalleryEdit()">✕</button></div>
+    <div class="modal-body">
+      <img id="gallery-edit-preview" src="" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:14px">
+      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="gallery-edit-title"></div>
+      <div class="form-group"><label class="form-label">Descripción</label><input class="form-input" id="gallery-edit-desc"></div>
+      <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="gallery-edit-cat"></select></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeGalleryEdit()">Cancelar</button>
+      <button class="btn-primary" onclick="saveGalleryEdit()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+//  CONFIG
+// ═══════════════════════════════════════
+const INITIAL_LIDER = "juan.mendoza@bplay.com.ar"; // primer líder por defecto
+const CATEGORIES = ["Procedimientos","Documentación","Depósitos","Retiros","Otros"];
+const CAT_COLORS = {
+  "Procedimientos":{bg:"#E1F5EE",color:"#0F6E56"},
+  "Documentación": {bg:"#E6F1FB",color:"#185FA5"},
+  "Depósitos":     {bg:"#E1F5EE",color:"#0F6E56"},
+  "Retiros":       {bg:"#FAEEDA",color:"#854F0B"},
+  "Otros":         {bg:"#F1EFE8",color:"#5F5E5A"},
+  "Escalamientos": {bg:"#FAEEDA",color:"#854F0B"},
+  "FAQs":          {bg:"#E6F1FB",color:"#185FA5"},
+  "Sistemas":      {bg:"#EEEDFE",color:"#3C3489"},
+  "Políticas":     {bg:"#FAECE7",color:"#993C1D"},
+};
+const STATUS = {
+  vigente:  {label:"Vigente",         cls:"status-vigente"},
+  revision: {label:"En revisión",     cls:"status-revision"},
+  obsoleto: {label:"Obsoleto",        cls:"status-obsoleto"},
+  pendiente:{label:"Pend. aprobación",cls:"status-pendiente"},
+};
+const LS = {theme:'intranet_theme', notifs:'intranet_notifs', favs:'intranet_favs', hist:'intranet_hist'};
+const NEW_DAYS = 7;
+const PRESENCE_TIMEOUT = 45000; // 45 segundos sin ping = desconectado
+
+let currentUser='', currentEmail='', isLider=false;
+let sessionId = 'sess_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,5);
+let notes={}, announcements={}, gallery={}, usersRoles={};
+let presenceData = {};
+let activeCategory="Todas", activeGalleryCat="Todas";
+let currentTags=[], currentLinks=[];
+let editingNoteId=null, editingAnnId=null, editingGalleryId=null, detailNoteId=null;
+let lightboxIds=[], lightboxIdx=0, galleryFileData=null;
+let viewMode='grid';
+let notifications=[], readNotifIds=new Set();
+let favorites=new Set(), myHistory=[];
+let presencePingInterval=null;
+
+// ═══════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════
+const today=()=>new Date().toISOString().split('T')[0];
+const nowISO=()=>new Date().toISOString();
+const nowTS=()=>Date.now();
+const fmtDate=d=>{try{return d?new Date(d).toLocaleDateString('es-AR'):''}catch{return d||''}};
+const fmtDT=d=>{try{if(!d)return'';const dt=new Date(d);return dt.toLocaleDateString('es-AR')+' '+dt.toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'})}catch{return d||''}};
+const isNew=d=>d&&(new Date()-new Date(d))/864e5<NEW_DAYS;
+const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const lid=()=>'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const catColor=cat=>CAT_COLORS[cat]||{bg:"#F1EFE8",color:"#5F5E5A"};
+const lsLoad=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}};
+const lsSave=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const initials=name=>name?name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2):'?';
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
+
+// ═══════════════════════════════════════
+//  THEME
+// ═══════════════════════════════════════
+function applyTheme(t){document.documentElement.setAttribute('data-theme',t);document.getElementById('theme-btn').textContent=t==='dark'?'☀️':'🌙';lsSave(LS.theme,t)}
+function toggleTheme(){applyTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark')}
+applyTheme(lsLoad(LS.theme,'light'));
+
+// ═══════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════
+function doLogin(){
+  const email=document.getElementById('login-email').value.trim();
+  const pass=document.getElementById('login-password').value;
+  const btn=document.getElementById('login-btn');
+  if(!email||!pass){showLoginError('Completá email y contraseña');return}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Ingresando…';
+  document.getElementById('login-error').style.display='none';
+  if(!window._firebaseReady||!window._auth){showLoginError('Firebase no configurado.');btn.disabled=false;btn.textContent='Ingresar';return}
+  window._signInWithEmailAndPassword(window._auth,email,pass).catch(err=>{
+    btn.disabled=false;btn.textContent='Ingresar';
+    const msgs={'auth/invalid-credential':'Email o contraseña incorrectos.','auth/user-not-found':'Usuario no encontrado.','auth/wrong-password':'Contraseña incorrecta.','auth/too-many-requests':'Demasiados intentos. Esperá unos minutos.'};
+    showLoginError(msgs[err.code]||'Error al ingresar. Intentá de nuevo.');
+  });
+}
+function showLoginError(msg){const el=document.getElementById('login-error');el.textContent='⚠️ '+msg;el.style.display='block'}
+
+function doLogout(){
+  if(!confirm('¿Salís de la sesión?'))return;
+  clearInterval(presencePingInterval);
+  if(window._db)window._remove(window._ref(window._db,'presence/'+sessionId));
+  if(window._auth)window._signOut(window._auth);
+  document.getElementById('main-app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('login-password').value='';
+  document.getElementById('profile-panel').classList.remove('open');
+}
+
+window.addEventListener('firebase-ready',()=>{
+  window._onAuthStateChanged(window._auth, async user=>{
+    if(user){
+      currentEmail = user.email||'';
+      currentUser  = user.displayName||user.email.split('@')[0];
+      document.getElementById('login-screen').style.display='none';
+      document.getElementById('main-app').style.display='block';
+      document.getElementById('login-btn').disabled=false;
+      document.getElementById('login-btn').textContent='Ingresar';
+      // set initial avatar
+      document.getElementById('profile-btn').textContent=initials(currentUser);
+      document.getElementById('profile-name').textContent=currentUser;
+      document.getElementById('profile-email').textContent=currentEmail;
+      loadLocalData();
+      setupFirebase();
+    } else {
+      document.getElementById('login-screen').style.display='flex';
+      document.getElementById('main-app').style.display='none';
+    }
+  });
+},{once:true});
+
+// ═══════════════════════════════════════
+//  LOCAL DATA
+// ═══════════════════════════════════════
+function loadLocalData(){
+  readNotifIds=new Set(lsLoad(LS.notifs,[]));
+  favorites=new Set(lsLoad(LS.favs,[]));
+  myHistory=lsLoad(LS.hist,[]);
+}
+
+// ═══════════════════════════════════════
+//  FIREBASE SETUP
+// ═══════════════════════════════════════
+function setupFirebase(){
+  const db=window._db, ref=window._ref;
+  // load roles first to know if lider
+  window._onValue(ref(db,'roles'), s=>{
+    usersRoles = s.val()||{};
+    // check role for current user
+    const myRole = usersRoles[btoa(currentEmail)]?.role || (currentEmail===INITIAL_LIDER?'lider':'colaborador');
+    isLider = myRole==='lider';
+    // if initial lider and not yet in roles, register them
+    if(currentEmail===INITIAL_LIDER && !usersRoles[btoa(currentEmail)]){
+      window._set(ref(db,'roles/'+btoa(currentEmail)),{email:currentEmail,name:currentUser,role:'lider'});
+    }
+    updateRoleUI();
+    renderLeaderPanel();
+    renderNotes();
+  });
+  window._onValue(ref(db,'notes'), s=>{
+    const prev=Object.keys(notes);
+    notes=s.val()||defaultNotes();
+    Object.values(notes).forEach(n=>{
+      if(!prev.includes(n.id)&&n.author!==currentUser&&isNew(n.date)){
+        addNotification(`📝 ${n.author} agregó: "${n.title}"`);
+      }
+    });
+    renderNotes();renderCatFilter();updatePendingBanner();updateAuthorFilter();
+  });
+  window._onValue(ref(db,'announcements'), s=>{announcements=s.val()||{};updateAnnBadge()});
+  window._onValue(ref(db,'gallery'),       s=>{gallery=s.val()||{};renderGallery()});
+  window._onValue(ref(db,'presence'),      s=>{presenceData=s.val()||{};renderPresence()});
+  window._onValue(ref(db,'activity'),      s=>{renderLeaderActivity(s.val()||{})});
+  registerPresence();
+  populateCatSelects();
+}
+
+function updateRoleUI(){
+  const badge=document.getElementById('profile-role-badge');
+  badge.textContent=isLider?'Líder':'Colaborador';
+  badge.className='profile-info-role '+(isLider?'role-lider':'role-colab');
+  document.getElementById('tab-lider').style.display=isLider?'':'none';
+}
+
+// ═══════════════════════════════════════
+//  PRESENCE — solo activos con ping reciente
+// ═══════════════════════════════════════
+function registerPresence(){
+  const ref=window._ref, db=window._db;
+  const presRef=ref(db,'presence/'+sessionId);
+  const ping=()=>{
+    window._set(presRef,{name:currentUser,email:currentEmail,ts:nowTS()});
+  };
+  ping();
+  window._onDisconnect(presRef).remove();
+  // ping each 30s to stay active
+  presencePingInterval=setInterval(ping, 30000);
+  // remove on page hide/close
+  document.addEventListener('visibilitychange',()=>{
+    if(document.hidden){window._remove(presRef)}
+    else{ping()}
+  });
+}
+
+function renderPresence(){
+  const chips=document.getElementById('presence-chips');
+  const now=nowTS();
+  // only show users with a ping within PRESENCE_TIMEOUT ms
+  const active=Object.values(presenceData).filter(u=>u.ts&&(now-u.ts)<PRESENCE_TIMEOUT);
+  if(!active.length){chips.innerHTML='<span class="presence-empty">Solo vos en línea</span>';return}
+  chips.innerHTML=active.map(u=>{
+    const isMe=u.email===currentEmail;
+    return`<span class="presence-chip">
+      <span class="presence-dot ${isMe?'me':'active'}"></span>
+      ${esc(u.name)}${isMe?' (vos)':''}
+    </span>`;
+  }).join('');
+}
+
+function dbSet(path,val){if(window._db)window._set(window._ref(window._db,path),val)}
+function dbRemove(path){if(window._db)window._remove(window._ref(window._db,path))}
+function logActivity(action,detail){dbSet('activity/'+lid(),{who:currentUser,action,detail,date:nowISO()})}
+
+// ═══════════════════════════════════════
+//  NOTIFICATIONS
+// ═══════════════════════════════════════
+function addNotification(text){
+  const id=lid();
+  notifications.unshift({id,text,date:nowISO()});
+  if(notifications.length>50)notifications=notifications.slice(0,50);
+  renderBell();
+}
+function renderBell(){
+  const unread=notifications.filter(n=>!readNotifIds.has(n.id));
+  document.getElementById('bell-dot').className='bell-dot'+(unread.length?' show':'');
+  const list=document.getElementById('bell-list');
+  if(!notifications.length){list.innerHTML='<div class="bell-empty">Sin notificaciones</div>';return}
+  list.innerHTML=notifications.slice(0,20).map(n=>
+    `<div class="bell-item${readNotifIds.has(n.id)?'':' unread'}">
+      <div>${esc(n.text)}</div>
+      <div class="bell-item-time">${fmtDT(n.date)}</div>
+    </div>`).join('');
+}
+function toggleBell(){
+  document.getElementById('profile-panel').classList.remove('open');
+  const panel=document.getElementById('bell-panel');
+  panel.classList.toggle('open');
+  if(panel.classList.contains('open')){
+    notifications.forEach(n=>readNotifIds.add(n.id));
+    lsSave(LS.notifs,[...readNotifIds]);
+    document.getElementById('bell-dot').className='bell-dot';
+    renderBell();
+  }
+}
+function clearNotifs(){notifications=[];renderBell();showToast('Notificaciones limpiadas')}
+
+// ═══════════════════════════════════════
+//  PROFILE MENU
+// ═══════════════════════════════════════
+function toggleProfile(){
+  document.getElementById('bell-panel').classList.remove('open');
+  document.getElementById('profile-panel').classList.toggle('open');
+}
+function openSection(sec){
+  document.getElementById('profile-panel').classList.remove('open');
+  if(sec==='favoritos'){renderFavModal();document.getElementById('fav-modal').style.display='flex'}
+  if(sec==='historial'){renderHistModal();document.getElementById('hist-modal').style.display='flex'}
+}
+function closeFav(){document.getElementById('fav-modal').style.display='none'}
+function closeHist(){document.getElementById('hist-modal').style.display='none'}
+
+function renderFavModal(){
+  const arr=Object.values(notes||{}).filter(n=>favorites.has(n.id));
+  const body=document.getElementById('fav-body');
+  if(!arr.length){body.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text4);font-size:13px">No tenés favoritos aún.<br>Hacé clic en ⭐ en cualquier nota para guardarla acá.</div>';return}
+  body.innerHTML=`<div class="notes-grid">${arr.map(n=>{
+    const col=catColor(n.category);const st=STATUS[n.status||'vigente']||STATUS.vigente;
+    return`<div class="note-card favorited" onclick="closeFav();openDetail('${n.id}')">
+      <div><span class="note-cat-badge" style="background:${col.bg};color:${col.color}">${esc(n.category)}</span><span class="status-badge ${st.cls}">${st.label}</span></div>
+      <h3 style="padding-right:0">${esc(n.title)}</h3>
+      <div class="note-preview">${esc(n.body)}</div>
+      <div class="note-footer">
+        <span class="note-author">👤 ${esc(n.author||'—')}</span>
+        <button class="icon-btn fav-active" onclick="event.stopPropagation();toggleFav('${n.id}');renderFavModal()">⭐</button>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function renderHistModal(){
+  const body=document.getElementById('hist-body');
+  if(!myHistory.length){body.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text4);font-size:13px">Sin actividad registrada aún.</div>';return}
+  body.innerHTML=myHistory.slice(0,60).map(h=>`
+    <div class="my-history-item">
+      <span class="my-history-icon">${h.icon}</span>
+      <div><div class="my-history-text">${esc(h.text)}</div><div class="my-history-time">${fmtDT(h.date)}</div></div>
+    </div>`).join('');
+}
+
+function addMyHistory(icon,text){
+  myHistory.unshift({icon,text,date:nowISO()});
+  if(myHistory.length>100)myHistory=myHistory.slice(0,100);
+  lsSave(LS.hist,myHistory);
+}
+
+// ═══════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════
+function switchTab(tab,btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sec-'+tab).classList.add('active');
+  if(tab==='lider')renderLeaderPanel();
+}
+
+function populateCatSelects(){
+  ['note-cat','gallery-cat-select','gallery-edit-cat'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const cur=el.value;
+    el.innerHTML=CATEGORIES.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    if(cur)el.value=cur;
+  });
+}
+
+// ═══════════════════════════════════════
+//  VIEW MODE
+// ═══════════════════════════════════════
+function setView(mode){
+  viewMode=mode;
+  document.getElementById('view-grid-btn').classList.toggle('active',mode==='grid');
+  document.getElementById('view-list-btn').classList.toggle('active',mode==='list');
+  renderNotes();
+}
+
+function updateAuthorFilter(){
+  const sel=document.getElementById('filter-author');
+  const cur=sel.value;
+  const authors=[...new Set(Object.values(notes||{}).map(n=>n.author).filter(Boolean))].sort();
+  sel.innerHTML='<option value="">Todos los autores</option>'+authors.map(a=>`<option value="${esc(a)}">${esc(a)}</option>`).join('');
+  if(cur)sel.value=cur;
+}
+
+// ═══════════════════════════════════════
+//  GLOBAL SEARCH
+// ═══════════════════════════════════════
+function globalSearch(q){
+  const res=document.getElementById('global-results');
+  if(!q||q.length<2){res.classList.remove('show');return}
+  const ql=q.toLowerCase();const results=[];
+  Object.values(notes||{}).forEach(n=>{if([n.title,n.body,n.author,...(n.tags||[])].some(x=>(x||'').toLowerCase().includes(ql)))results.push({icon:'📝',title:n.title,sub:n.category+' · '+fmtDate(n.date),action:`openDetail('${n.id}')`})});
+  Object.values(gallery||{}).forEach(g=>{if([g.title,g.desc,g.cat].some(x=>(x||'').toLowerCase().includes(ql)))results.push({icon:'🖼️',title:g.title||'Sin título',sub:'Galería · '+fmtDate(g.date),action:`openLightbox('${g.id}')`})});
+  Object.values(announcements||{}).forEach(a=>{if([a.title,a.body].some(x=>(x||'').toLowerCase().includes(ql)))results.push({icon:'📢',title:a.title,sub:'Anuncio · '+fmtDate(a.date),action:`openAnn()`})});
+  if(!results.length){res.innerHTML='<div class="global-result-empty">Sin resultados para "'+esc(q)+'"</div>';res.classList.add('show');return}
+  res.innerHTML=results.slice(0,8).map(r=>`<div class="global-result-item" onclick="${r.action}"><span class="global-result-icon">${r.icon}</span><div class="global-result-text"><div class="global-result-title">${esc(r.title)}</div><div class="global-result-sub">${esc(r.sub)}</div></div></div>`).join('');
+  res.classList.add('show');
+}
+function hideGlobalResults(){document.getElementById('global-results').classList.remove('show')}
+
+// ═══════════════════════════════════════
+//  NOTES
+// ═══════════════════════════════════════
+function renderCatFilter(){
+  document.getElementById('cat-filter').innerHTML=["Todas",...CATEGORIES].map(c=>
+    `<button class="cat-pill${c===activeCategory?' active':''}" onclick="setCategory('${esc(c)}')">${esc(c)}</button>`
+  ).join('');
+}
+function setCategory(cat){activeCategory=cat;renderCatFilter();renderNotes()}
+
+function renderNotes(){
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
+  const statusF=document.getElementById('filter-status')?.value||'';
+  const authorF=document.getElementById('filter-author')?.value||'';
+  let arr=Object.values(notes||{}).filter(n=>{
+    if(!isLider&&n.status==='pendiente'&&n.author!==currentUser)return false;
+    const mc=activeCategory==="Todas"||n.category===activeCategory;
+    const ms=!statusF||n.status===statusF;
+    const ma=!authorF||n.author===authorF;
+    const mq=!q||[n.title,n.body,n.category,n.author,...(n.tags||[])].some(x=>(x||'').toLowerCase().includes(q));
+    return mc&&ms&&ma&&mq;
+  }).sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||(new Date(b.date)-new Date(a.date)));
+
+  const container=document.getElementById('notes-container');
+  if(!arr.length){container.innerHTML='<div class="empty-state">No se encontraron notas.</div>';return}
+
+  if(viewMode==='list'){
+    container.innerHTML=`<div class="notes-list">${arr.map(n=>{
+      const col=catColor(n.category);const st=STATUS[n.status||'vigente']||STATUS.vigente;
+      return`<div class="note-list-item${n.pinned?' pinned':''}" onclick="openDetail('${n.id}')">
+        <span class="note-cat-badge" style="background:${col.bg};color:${col.color};margin:0">${esc(n.category)}</span>
+        <span class="note-list-title">${n.pinned?'📌 ':''}${esc(n.title)}</span>
+        <span class="status-badge ${st.cls}">${st.label}</span>
+        <span class="note-list-meta">👤 ${esc(n.author||'—')} · ${fmtDate(n.date)}</span>
+      </div>`;
+    }).join('')}</div>`;
+    return;
+  }
+
+  container.innerHTML=`<div class="notes-grid">${arr.map(n=>{
+    const col=catColor(n.category);const st=STATUS[n.status||'vigente']||STATUS.vigente;
+    const tags=(n.tags||[]).map(t=>`<span class="tag-chip">${esc(t)}</span>`).join('');
+    const votes=Object.keys(n.votes||{}).length;const comments=Object.keys(n.comments||{}).length;
+    const myVote=!!(n.votes||{})[currentUser];const isFav=favorites.has(n.id);
+    return`<div class="note-card${n.pinned?' pinned':''}${isNew(n.date)?' is-new':''}${isFav?' favorited':''}" onclick="openDetail('${n.id}')">
+      <span class="pin-icon">📌</span>
+      <div style="margin-bottom:6px"><span class="note-cat-badge" style="background:${col.bg};color:${col.color}">${esc(n.category)}</span><span class="status-badge ${st.cls}">${st.label}</span></div>
+      <h3>${esc(n.title)}</h3>
+      <div class="note-preview">${esc(n.body)}</div>
+      ${tags?`<div class="note-tags">${tags}</div>`:''}
+      <div class="note-footer">
+        <span class="note-author">👤 ${esc(n.author||'—')}</span>
+        <div class="note-stats"><span style="${myVote?'color:var(--blue)':''}">👍 ${votes}</span><span>💬 ${comments}</span></div>
+        <div class="note-card-actions" onclick="event.stopPropagation()">
+          <button class="icon-btn${isFav?' fav-active':''}" title="Favorito" onclick="toggleFav('${n.id}')">⭐</button>
+          <button class="icon-btn" title="${n.pinned?'Desfijar':'Fijar'}" onclick="togglePin('${n.id}')">${n.pinned?'📌':'📍'}</button>
+          <button class="icon-btn" title="Editar" onclick="editNote('${n.id}')">✏️</button>
+          ${isLider?`<button class="icon-btn delete" title="Eliminar" onclick="deleteNote('${n.id}')">🗑️</button>`:''}
+        </div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// ═══════════════════════════════════════
+//  FAVORITES
+// ═══════════════════════════════════════
+function toggleFav(id){
+  if(favorites.has(id))favorites.delete(id);else favorites.add(id);
+  lsSave(LS.favs,[...favorites]);
+  renderNotes();
+  showToast(favorites.has(id)?'⭐ Agregado a favoritos':'Quitado de favoritos');
+}
+
+// ═══════════════════════════════════════
+//  NOTE DETAIL
+// ═══════════════════════════════════════
+function openDetail(id){
+  const note=notes[id];if(!note)return;
+  detailNoteId=id;
+  const col=catColor(note.category);const st=STATUS[note.status||'vigente']||STATUS.vigente;
+  const tags=(note.tags||[]).map(t=>`<span class="tag-chip" style="font-size:12px;padding:4px 10px">${esc(t)}</span>`).join('');
+  const votes=Object.keys(note.votes||{});const myVote=votes.includes(currentUser);
+  const isFav=favorites.has(id);
+  const commentsArr=Object.entries(note.comments||{}).sort((a,b)=>a[1].date>b[1].date?1:-1);
+  const commHtml=commentsArr.map(([cid,c])=>`<div class="comment"><div class="comment-author">${esc(c.author)}</div><div class="comment-text">${esc(c.text)}</div><div class="comment-meta"><span>${fmtDT(c.date)}</span>${c.author===currentUser||isLider?`<button class="comment-del" onclick="deleteComment('${id}','${cid}')">Eliminar</button>`:''}</div></div>`).join('');
+  const histArr=(note.history||[]).slice().reverse().slice(0,10);
+  const histHtml=histArr.map(h=>`<div class="history-entry"><span class="history-who">${esc(h.who)}</span><span>${esc(h.action)} · ${fmtDT(h.date)}</span></div>`).join('');
+  const linksHtml=(note.links||[]).filter(l=>l.url).map(l=>`<div class="note-link-item">🔗 <a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label||l.url)}</a></div>`).join('');
+  const approvalBar=isLider&&note.status==='pendiente'?`<div class="approval-bar"><span class="approval-bar-text">⏳ Esta nota está pendiente de tu aprobación</span><div style="display:flex;gap:6px"><button class="btn-xs success" onclick="approveNote('${id}');closeDetail()">✅ Aprobar</button><button class="btn-xs danger" onclick="rejectNote('${id}');closeDetail()">❌ Rechazar</button></div></div>`:'';
+  document.getElementById('detail-breadcrumb').textContent=note.category+' · '+fmtDate(note.date);
+  document.getElementById('note-detail-body').innerHTML=`
+    ${approvalBar}
+    <div><span class="note-cat-badge" style="background:${col.bg};color:${col.color}">${esc(note.category)}</span><span class="status-badge ${st.cls}">${st.label}</span>${note.pinned?' 📌':''}</div>
+    <div class="note-detail-title">${esc(note.title)}</div>
+    <div class="note-detail-meta"><span>👤 ${esc(note.author||'—')}</span><span>📅 ${fmtDate(note.date)}</span>${isNew(note.date)?'<span style="background:var(--green-bg);color:var(--green);padding:2px 8px;border-radius:20px;font-weight:600;font-size:11px">Nuevo</span>':''}</div>
+    <div class="note-detail-body">${esc(note.body)}</div>
+    ${tags?`<div class="note-detail-tags">${tags}</div>`:''}
+    ${linksHtml?`<div class="note-links"><div class="note-links-title">🔗 Links útiles</div>${linksHtml}</div>`:''}
+    <div class="vote-row">
+      <button class="vote-btn${myVote?' voted':''}" onclick="toggleVote('${id}')">👍 <span>${votes.length}</span> ${myVote?'¡Útil!':'Me resultó útil'}</button>
+      <button class="icon-btn${isFav?' fav-active':''}" onclick="toggleFav('${id}')" title="Favorito">⭐</button>
+    </div>
+    <div class="comments-section">
+      <div class="comments-title">💬 Comentarios (${commentsArr.length})</div>
+      ${commHtml||'<p style="font-size:13px;color:var(--text4);margin-bottom:12px">Sin comentarios aún.</p>'}
+      <div class="comment-input-wrap">
+        <textarea class="comment-input" id="new-comment-${id}" placeholder="Dejá un comentario…" rows="2"></textarea>
+        <button class="btn-primary" style="align-self:flex-end" onclick="addComment('${id}')">Enviar</button>
+      </div>
+    </div>
+    <div class="history-section">
+      <div class="history-title" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">🕑 Historial (${histArr.length}) ▾</div>
+      <div class="history-list" style="display:none">${histHtml||'<span style="color:var(--text4)">Sin historial</span>'}</div>
+    </div>`;
+  addMyHistory('👁️',`Viste la nota "${note.title}"`);
+  document.getElementById('note-detail-modal').style.display='flex';
+}
+function closeDetail(){document.getElementById('note-detail-modal').style.display='none'}
+function editFromDetail(){closeDetail();editNote(detailNoteId)}
+
+function toggleVote(id){
+  const note=notes[id];if(!note)return;
+  if(!note.votes)note.votes={};
+  if(note.votes[currentUser])delete note.votes[currentUser];else note.votes[currentUser]=true;
+  dbSet('notes/'+id+'/votes',note.votes);
+  addMyHistory('👍',`Marcaste como útil: "${note.title}"`);
+  showToast(note.votes[currentUser]?'👍 ¡Útil!':'Voto quitado');
+  openDetail(id);
+}
+
+function addComment(noteId){
+  const input=document.getElementById('new-comment-'+noteId);
+  const text=input?.value.trim();if(!text){showToast('⚠️ Escribí algo');return}
+  const note=notes[noteId];if(!note)return;
+  if(!note.comments)note.comments={};
+  const cid=lid();
+  note.comments[cid]={author:currentUser,text,date:nowISO()};
+  dbSet('notes/'+noteId+'/comments',note.comments);
+  addHistory(noteId,'Comentó la nota');
+  logActivity('Comentó una nota',note.title);
+  addMyHistory('💬',`Comentaste en "${note.title}"`);
+  showToast('Comentario agregado ✓');openDetail(noteId);
+}
+function deleteComment(noteId,cid){
+  if(!confirm('¿Eliminás este comentario?'))return;
+  const note=notes[noteId];if(!note)return;
+  delete note.comments[cid];
+  dbSet('notes/'+noteId+'/comments',note.comments);
+  showToast('Eliminado');openDetail(noteId);
+}
+function addHistory(noteId,action){
+  const note=notes[noteId];if(!note)return;
+  if(!note.history)note.history=[];
+  note.history.push({who:currentUser,action,date:nowISO()});
+  if(note.history.length>30)note.history=note.history.slice(-30);
+  dbSet('notes/'+noteId+'/history',note.history);
+}
+
+// ═══════════════════════════════════════
+//  NOTE FORM
+// ═══════════════════════════════════════
+function openNoteForm(){
+  editingNoteId=null;currentTags=[];currentLinks=[];populateCatSelects();
+  document.getElementById('note-modal-title').textContent='Nueva nota';
+  ['note-title','note-body'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('note-cat').value=CATEGORIES[0];
+  const statusEl=document.getElementById('note-status');
+  statusEl.innerHTML=isLider
+    ?'<option value="vigente">✅ Vigente</option><option value="revision">🔄 En revisión</option><option value="obsoleto">❌ Obsoleto</option>'
+    :'<option value="pendiente">⏳ Enviar para aprobación</option>';
+  document.getElementById('note-pin').checked=false;
+  document.getElementById('tag-input').value='';
+  renderTagsList();renderLinksList();
+  document.getElementById('note-modal').style.display='flex';
+}
+function editNote(id){
+  const note=notes[id];if(!note)return;
+  if(!isLider&&note.author!==currentUser){showToast('Solo podés editar tus propias notas');return}
+  editingNoteId=id;currentTags=[...(note.tags||[])];currentLinks=[...(note.links||[])];
+  populateCatSelects();
+  document.getElementById('note-modal-title').textContent='Editar nota';
+  document.getElementById('note-title').value=note.title;
+  document.getElementById('note-cat').value=note.category;
+  const statusEl=document.getElementById('note-status');
+  statusEl.innerHTML=isLider
+    ?'<option value="vigente">✅ Vigente</option><option value="revision">🔄 En revisión</option><option value="obsoleto">❌ Obsoleto</option><option value="pendiente">⏳ Pendiente</option>'
+    :'<option value="pendiente">⏳ Enviar para aprobación</option>';
+  statusEl.value=note.status||'vigente';
+  document.getElementById('note-body').value=note.body;
+  document.getElementById('note-pin').checked=!!note.pinned;
+  document.getElementById('tag-input').value='';
+  renderTagsList();renderLinksList();
+  document.getElementById('note-modal').style.display='flex';
+}
+function closeNoteForm(){document.getElementById('note-modal').style.display='none'}
+function handleTagKey(e){if(e.key==='Enter'){e.preventDefault();addTag()}}
+function addTag(){const input=document.getElementById('tag-input');const val=input.value.trim().toLowerCase();if(!val||currentTags.includes(val))return;currentTags.push(val);input.value='';renderTagsList()}
+function removeTag(t){currentTags=currentTags.filter(x=>x!==t);renderTagsList()}
+function renderTagsList(){document.getElementById('tags-list').innerHTML=currentTags.map(t=>`<span class="tag-removable">${esc(t)}<button onclick="removeTag('${esc(t)}')">✕</button></span>`).join('')}
+function addLinkRow(){currentLinks.push({url:'',label:''});renderLinksList()}
+function removeLink(i){currentLinks.splice(i,1);renderLinksList()}
+function renderLinksList(){document.getElementById('links-list').innerHTML=currentLinks.map((l,i)=>`<div class="link-row"><input placeholder="URL (https://...)" value="${esc(l.url)}" oninput="currentLinks[${i}].url=this.value"><input placeholder="Etiqueta (opcional)" value="${esc(l.label)}" oninput="currentLinks[${i}].label=this.value"><button class="icon-btn delete" onclick="removeLink(${i})">✕</button></div>`).join('')}
+
+function saveNote(){
+  const title=document.getElementById('note-title').value.trim();
+  const cat=document.getElementById('note-cat').value;
+  const status=document.getElementById('note-status').value;
+  const body=document.getElementById('note-body').value.trim();
+  const pinned=document.getElementById('note-pin').checked;
+  const links=currentLinks.filter(l=>l.url.trim());
+  if(!title||!body){showToast('⚠️ Completá título y contenido');return}
+  if(editingNoteId){
+    const note=notes[editingNoteId];
+    Object.assign(note,{title,category:cat,status:isLider?status:'pendiente',body,tags:[...currentTags],links,pinned,date:today()});
+    addHistory(editingNoteId,'Editó la nota');
+    dbSet('notes/'+editingNoteId,note);
+    logActivity('Editó una nota',title);
+    addMyHistory('✏️',`Editaste la nota "${title}"`);
+    showToast('Nota actualizada ✓');
+  }else{
+    const id=lid();
+    const finalStatus=isLider?status:'pendiente';
+    const nn={id,title,category:cat,status:finalStatus,body,author:currentUser,tags:[...currentTags],links,pinned,date:today(),votes:{},comments:{},history:[{who:currentUser,action:'Creó la nota',date:nowISO()}]};
+    notes[id]=nn;dbSet('notes/'+id,nn);
+    logActivity('Creó una nota',title);
+    addMyHistory('📝',`Creaste la nota "${title}"`);
+    showToast(isLider?'Nota creada ✓':'Nota enviada para aprobación ✓');
+  }
+  closeNoteForm();updatePendingBanner();
+}
+function deleteNote(id){
+  if(!isLider){showToast('Solo el líder puede eliminar notas');return}
+  if(!confirm('¿Eliminás esta nota?'))return;
+  const note=notes[id];
+  addMyHistory('🗑️',`Eliminaste la nota "${note?.title||id}"`);
+  logActivity('Eliminó una nota',note?.title||id);
+  delete notes[id];dbRemove('notes/'+id);showToast('Nota eliminada');
+}
+function togglePin(id){
+  const note=notes[id];if(!note)return;
+  if(!isLider){showToast('Solo el líder puede fijar notas');return}
+  note.pinned=!note.pinned;
+  addHistory(id,note.pinned?'Fijó la nota':'Desfijó la nota');
+  dbSet('notes/'+id+'/pinned',note.pinned);
+  showToast(note.pinned?'Nota fijada 📌':'Nota desfijada');
+}
+
+// ═══════════════════════════════════════
+//  APPROVAL
+// ═══════════════════════════════════════
+function updatePendingBanner(){
+  const pending=Object.values(notes||{}).filter(n=>n.status==='pendiente');
+  const banner=document.getElementById('pending-banner');
+  if(isLider&&pending.length){banner.style.display='flex';document.getElementById('pending-count').textContent=pending.length}
+  else{banner.style.display='none'}
+}
+function approveNote(id){
+  const note=notes[id];if(!note)return;
+  note.status='vigente';
+  addHistory(id,'Aprobó la nota');
+  dbSet('notes/'+id+'/status','vigente');
+  dbSet('notes/'+id+'/history',note.history);
+  logActivity('Aprobó una nota',note.title);
+  addMyHistory('✅',`Aprobaste la nota "${note.title}"`);
+  showToast('✅ Nota aprobada y publicada');
+  renderLeaderPanel();updatePendingBanner();
+}
+function rejectNote(id){
+  const reason=prompt('¿Por qué rechazás esta nota?');if(reason===null)return;
+  const note=notes[id];if(!note)return;
+  note.status='revision';
+  if(!note.comments)note.comments={};
+  const cid=lid();
+  note.comments[cid]={author:currentUser,text:'🔴 Rechazada: '+reason,date:nowISO()};
+  addHistory(id,'Rechazó la nota: '+reason);
+  dbSet('notes/'+id+'/status','revision');
+  dbSet('notes/'+id+'/comments',note.comments);
+  dbSet('notes/'+id+'/history',note.history);
+  logActivity('Rechazó una nota',note.title);
+  addMyHistory('❌',`Rechazaste la nota "${note.title}"`);
+  showToast('Nota enviada a revisión');
+  renderLeaderPanel();updatePendingBanner();
+}
+
+// ═══════════════════════════════════════
+//  EXPORT
+// ═══════════════════════════════════════
+function exportNotes(){
+  const arr=Object.values(notes||{}).filter(n=>n.status!=='pendiente').sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+  let html=`<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Notas exportadas</title><style>body{font-family:sans-serif;max-width:800px;margin:2rem auto;padding:0 1rem}h1{font-size:22px;margin-bottom:4px}.sub{color:#6b6a65;font-size:13px;margin-bottom:2rem}.note{border:1px solid #e2e0d8;border-radius:10px;padding:1rem 1.25rem;margin-bottom:14px;page-break-inside:avoid}.cat{font-size:10px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:20px;display:inline-block}h2{font-size:16px;margin:8px 0 6px}pre{font-size:13px;color:#4a4a48;white-space:pre-wrap;line-height:1.6}.meta{font-size:11px;color:#9a9893;margin-top:10px}</style></head><body><h1>📋 Base de conocimiento</h1><p class="sub">Exportado el ${fmtDate(today())} por ${esc(currentUser)} · ${arr.length} notas</p>`;
+  arr.forEach(n=>{const col=catColor(n.category);html+=`<div class="note"><span class="cat" style="background:${col.bg};color:${col.color}">${n.category}</span>${n.pinned?' 📌':''}<h2>${n.title}</h2><pre>${n.body}</pre><div class="meta">👤 ${n.author||'—'} · ${fmtDate(n.date)}</div></div>`;});
+  html+='</body></html>';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html'}));a.download='notas-equipo.html';a.click();
+  showToast('📥 Exportación descargada');
+}
+
+// ═══════════════════════════════════════
+//  ANNOUNCEMENTS
+// ═══════════════════════════════════════
+function updateAnnBadge(){const c=Object.keys(announcements||{}).length;document.getElementById('ann-badge').textContent=c+(c===1?' anuncio':' anuncios')}
+function openAnn(){renderAnnList();document.getElementById('ann-modal').style.display='flex'}
+function closeAnn(){document.getElementById('ann-modal').style.display='none'}
+function renderAnnList(){
+  const arr=Object.entries(announcements||{}).sort((a,b)=>b[1].date>a[1].date?1:-1);
+  const el=document.getElementById('ann-list');
+  if(!arr.length){el.innerHTML='<p style="font-size:13px;color:var(--text4);padding:1rem 0">Sin anuncios.</p>';return}
+  el.innerHTML=arr.map(([id,a])=>`<div class="ann-item"><h3>${esc(a.title)}</h3><p>${esc(a.body)}</p><div class="ann-meta">Por ${esc(a.author||'Equipo')} · ${fmtDate(a.date)}</div>${isLider?`<div class="ann-actions"><button class="btn-xs primary" onclick="openAnnForm('${id}')">Editar</button><button class="btn-xs danger" onclick="deleteAnn('${id}')">Eliminar</button></div>`:''}</div>`).join('');
+}
+function openAnnForm(id){
+  if(!isLider){showToast('Solo el líder puede publicar anuncios');return}
+  editingAnnId=id||null;
+  document.getElementById('ann-form-title').textContent=id?'Editar anuncio':'Nuevo anuncio';
+  const ann=id?announcements[id]:null;
+  document.getElementById('ann-title').value=ann?.title||'';
+  document.getElementById('ann-body').value=ann?.body||'';
+  document.getElementById('ann-form-modal').style.display='flex';
+}
+function closeAnnForm(){document.getElementById('ann-form-modal').style.display='none'}
+function saveAnn(){
+  const title=document.getElementById('ann-title').value.trim();
+  const body=document.getElementById('ann-body').value.trim();
+  if(!title||!body){showToast('⚠️ Completá los campos');return}
+  if(editingAnnId){Object.assign(announcements[editingAnnId],{title,body,date:today()});dbSet('announcements/'+editingAnnId,announcements[editingAnnId]);showToast('Anuncio actualizado ✓')}
+  else{const id=lid();announcements[id]={id,title,body,author:currentUser,date:today()};dbSet('announcements/'+id,announcements[id]);addMyHistory('📢',`Publicaste: "${title}"`);logActivity('Publicó un anuncio',title);showToast('Anuncio publicado ✓')}
+  closeAnnForm();renderAnnList();
+}
+function deleteAnn(id){if(!confirm('¿Eliminás?'))return;delete announcements[id];dbRemove('announcements/'+id);renderAnnList();showToast('Eliminado')}
+
+// ═══════════════════════════════════════
+//  LEADER PANEL
+// ═══════════════════════════════════════
+function renderLeaderPanel(){
+  if(!isLider)return;
+  const allNotes=Object.values(notes||{});
+  const pending=allNotes.filter(n=>n.status==='pendiente');
+  const vigentes=allNotes.filter(n=>n.status==='vigente');
+  const authors=[...new Set(allNotes.map(n=>n.author).filter(Boolean))];
+  document.getElementById('leader-stats').innerHTML=[
+    {num:allNotes.length,label:'Notas totales',color:'var(--blue)'},
+    {num:vigentes.length,label:'Vigentes',color:'var(--green)'},
+    {num:pending.length,label:'Pendientes',color:'var(--amber)'},
+    {num:authors.length,label:'Colaboradores',color:'#3C3489'},
+  ].map(s=>`<div class="leader-stat"><div class="leader-stat-num" style="color:${s.color}">${s.num}</div><div class="leader-stat-label">${s.label}</div></div>`).join('');
+
+  const pendingEl=document.getElementById('leader-pending');
+  if(!pending.length){pendingEl.innerHTML='<p style="font-size:13px;color:var(--text4);padding:.5rem 0">Todo aprobado ✅</p>'}
+  else{pendingEl.innerHTML=pending.map(n=>`<div class="leader-pending-item"><div><div class="leader-pending-title">${esc(n.title)}</div><div class="leader-pending-meta">👤 ${esc(n.author)} · ${esc(n.category)} · ${fmtDate(n.date)}</div></div><div style="display:flex;gap:6px"><button class="btn-xs" onclick="openDetail('${n.id}')">Ver</button><button class="btn-xs success" onclick="approveNote('${n.id}')">✅ Aprobar</button><button class="btn-xs danger" onclick="rejectNote('${n.id}')">❌ Rechazar</button></div></div>`).join('')}
+
+  renderUsersPanel();
+}
+
+// ═══════════════════════════════════════
+//  USERS & ROLES PANEL
+// ═══════════════════════════════════════
+function renderUsersPanel(){
+  const el=document.getElementById('leader-users');
+  const now=nowTS();
+  // gather all known users: from roles + from presence
+  const allUsers={};
+  Object.values(usersRoles||{}).forEach(u=>{allUsers[u.email]={email:u.email,name:u.name||u.email,role:u.role||'colaborador'}});
+  // also add presence users not yet in roles
+  Object.values(presenceData||{}).forEach(u=>{
+    if(!allUsers[u.email])allUsers[u.email]={email:u.email,name:u.name,role:'colaborador'};
+  });
+  const users=Object.values(allUsers);
+  if(!users.length){el.innerHTML='<p style="font-size:13px;color:var(--text4);padding:.5rem 0">Aún no hay usuarios registrados.</p>';return}
+  el.innerHTML=users.map(u=>{
+    const online=Object.values(presenceData||{}).some(p=>p.email===u.email&&p.ts&&(now-p.ts)<PRESENCE_TIMEOUT);
+    const isMe=u.email===currentEmail;
+    return`<div class="user-row">
+      <div class="user-avatar">${initials(u.name)}</div>
+      <div class="user-info">
+        <div class="user-info-name">${esc(u.name)}${isMe?' (vos)':''}</div>
+        <div class="user-info-email">${esc(u.email)}</div>
+      </div>
+      <div class="user-online-dot ${online?'online':'offline'}" title="${online?'En línea':'Sin conexión'}"></div>
+      <select class="role-select" onchange="changeUserRole('${esc(u.email)}','${esc(u.name)}',this.value)" ${isMe?'disabled':''}>
+        <option value="colaborador"${u.role==='colaborador'?' selected':''}>Colaborador</option>
+        <option value="lider"${u.role==='lider'?' selected':''}>Líder</option>
+      </select>
+    </div>`;
+  }).join('');
+}
+
+function changeUserRole(email,name,newRole){
+  const key=btoa(email);
+  const current=usersRoles[key]||{};
+  dbSet('roles/'+key,{...current,email,name,role:newRole});
+  showToast(`Rol de ${name} actualizado a ${newRole} ✓`);
+  addMyHistory('👥',`Cambiaste el rol de ${name} a ${newRole}`);
+  logActivity('Cambió rol de usuario',`${name} → ${newRole}`);
+}
+
+function renderLeaderActivity(activityData){
+  if(!isLider)return;
+  const arr=Object.values(activityData||{}).sort((a,b)=>b.date>a.date?1:-1).slice(0,20);
+  const el=document.getElementById('leader-activity');
+  if(!arr.length){el.innerHTML='<p style="font-size:13px;color:var(--text4);padding:.5rem 0">Sin actividad.</p>';return}
+  el.innerHTML=arr.map(a=>`<div class="leader-activity-item"><span class="leader-activity-who">${esc(a.who)}</span><span class="leader-activity-text">${esc(a.action)}${a.detail?': '+esc(a.detail):''}</span><span class="leader-activity-time">${fmtDT(a.date)}</span></div>`).join('');
+}
+
+// ═══════════════════════════════════════
+//  GALLERY
+// ═══════════════════════════════════════
+function renderGalleryCatFilter(){document.getElementById('gallery-cat-filter').innerHTML=["Todas",...CATEGORIES].map(c=>`<button class="cat-pill${c===activeGalleryCat?' active':''}" onclick="setGalleryCat('${esc(c)}')">${esc(c)}</button>`).join('')}
+function setGalleryCat(cat){activeGalleryCat=cat;renderGalleryCatFilter();renderGallery()}
+function renderGallery(){
+  renderGalleryCatFilter();
+  const arr=Object.values(gallery||{}).filter(g=>activeGalleryCat==="Todas"||g.cat===activeGalleryCat);
+  lightboxIds=Object.values(gallery||{}).map(g=>g.id);
+  const grid=document.getElementById('gallery-grid');
+  if(!arr.length){grid.innerHTML=`<div style="grid-column:1/-1"><div class="upload-zone" onclick="openGalleryForm()"><div style="font-size:28px;margin-bottom:8px">🖼️</div>Hacé clic para subir la primera imagen</div></div>`;return}
+  grid.innerHTML=arr.map(g=>{const col=catColor(g.cat||'Otros');return`<div class="gallery-item" onclick="openLightbox('${g.id}')"><img class="gallery-thumb" src="${g.src}" alt="${esc(g.title||'')}"><div class="gallery-cat-badge" style="background:${col.bg};color:${col.color}">${esc(g.cat||'Otros')}</div><div class="gallery-item-actions" onclick="event.stopPropagation()"><button class="gallery-action-btn" onclick="openGalleryEdit('${g.id}')">✏️</button>${isLider?`<button class="gallery-action-btn" onclick="deleteGalleryItem('${g.id}')">🗑</button>`:''}</div><div class="gallery-info"><div class="gallery-info-title">${esc(g.title||'Sin título')}</div>${g.desc?`<div class="gallery-info-desc">${esc(g.desc)}</div>`:''}<div class="gallery-info-meta"><span>👤 ${esc(g.author||'—')}</span><span>${fmtDate(g.date)}</span></div></div></div>`;}).join('');
+}
+function openGalleryForm(){galleryFileData=null;populateCatSelects();['gallery-file-input','gallery-title','gallery-desc'].forEach(id=>document.getElementById(id).value='');document.getElementById('gallery-cat-select').value=CATEGORIES[0];document.getElementById('gallery-preview').style.display='none';document.getElementById('gallery-upload-zone').style.display='block';document.getElementById('gallery-form-modal').style.display='flex'}
+function closeGalleryForm(){document.getElementById('gallery-form-modal').style.display='none'}
+function previewGalleryFile(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{galleryFileData=e.target.result;const prev=document.getElementById('gallery-preview');prev.src=galleryFileData;prev.style.display='block';document.getElementById('gallery-upload-zone').style.display='none';if(!document.getElementById('gallery-title').value)document.getElementById('gallery-title').value=file.name.replace(/\.[^.]+$/,'');};reader.readAsDataURL(file)}
+function saveGalleryItem(){if(!galleryFileData){showToast('⚠️ Elegí una imagen');return}const title=document.getElementById('gallery-title').value.trim()||'Sin título';const desc=document.getElementById('gallery-desc').value.trim();const cat=document.getElementById('gallery-cat-select').value;const id=lid();gallery[id]={id,src:galleryFileData,title,desc,cat,author:currentUser,date:today()};dbSet('gallery/'+id,gallery[id]);addMyHistory('🖼️',`Subiste la imagen "${title}"`);logActivity('Subió una imagen',title);closeGalleryForm();showToast('Imagen subida ✓')}
+function openGalleryEdit(id){const item=gallery[id];if(!item)return;editingGalleryId=id;populateCatSelects();document.getElementById('gallery-edit-preview').src=item.src;document.getElementById('gallery-edit-title').value=item.title||'';document.getElementById('gallery-edit-desc').value=item.desc||'';document.getElementById('gallery-edit-cat').value=item.cat||CATEGORIES[0];document.getElementById('gallery-edit-modal').style.display='flex'}
+function closeGalleryEdit(){document.getElementById('gallery-edit-modal').style.display='none'}
+function saveGalleryEdit(){const item=gallery[editingGalleryId];if(!item)return;item.title=document.getElementById('gallery-edit-title').value.trim()||'Sin título';item.desc=document.getElementById('gallery-edit-desc').value.trim();item.cat=document.getElementById('gallery-edit-cat').value;dbSet('gallery/'+editingGalleryId,item);closeGalleryEdit();showToast('Actualizado ✓')}
+function deleteGalleryItem(id){if(!confirm('¿Eliminás esta imagen?'))return;delete gallery[id];dbRemove('gallery/'+id);showToast('Imagen eliminada')}
+function openLightbox(id){lightboxIds=Object.values(gallery||{}).map(g=>g.id);lightboxIdx=lightboxIds.indexOf(id);showLightboxItem();document.getElementById('lightbox').style.display='flex'}
+function closeLightbox(){document.getElementById('lightbox').style.display='none'}
+function lightboxNav(dir){lightboxIdx=(lightboxIdx+dir+lightboxIds.length)%lightboxIds.length;showLightboxItem()}
+function showLightboxItem(){const item=gallery[lightboxIds[lightboxIdx]];if(!item)return;document.getElementById('lightbox-img').src=item.src;document.getElementById('lightbox-title').textContent=item.title||'';document.getElementById('lightbox-desc').textContent=item.desc||''}
+
+// ═══════════════════════════════════════
+//  DEFAULTS
+// ═══════════════════════════════════════
+function defaultNotes(){
+  const n={};
+  [{id:'n1',title:"Procedimiento de escalamiento",category:"Procedimientos",body:"1. Verificar que el cliente esperó más de 72hs.\n2. Abrir ticket con prioridad media.\n3. Notificar al supervisor.\n4. Registrar en sistema.",status:"vigente",tags:["escalamiento"],pinned:true,date:today(),author:"Equipo",votes:{},comments:{},history:[],links:[]},
+   {id:'n2',title:"Documentación de alta de cuenta",category:"Documentación",body:"Formularios necesarios:\n- DNI del titular\n- Constancia de CUIL\n- Comprobante de domicilio",status:"vigente",tags:["alta"],pinned:false,date:today(),author:"Equipo",votes:{},comments:{},history:[],links:[]},
+   {id:'n3',title:"Límites de depósito",category:"Depósitos",body:"Efectivo en sucursal: hasta $500.000\nTransferencia: sin límite\nCajero: hasta $200.000",status:"vigente",tags:["límites"],pinned:false,date:today(),author:"Equipo",votes:{},comments:{},history:[],links:[]},
+   {id:'n4',title:"Proceso de retiro anticipado",category:"Retiros",body:"1. Verificar identidad.\n2. Completar formulario F-22.\n3. Calcular penalidad.\n4. Aprobación supervisor > $100.000.",status:"vigente",tags:["retiro"],pinned:false,date:today(),author:"Equipo",votes:{},comments:{},history:[],links:[]},
+  ].forEach(note=>{n[note.id]=note});
+  return n;
+}
+
+// ═══════════════════════════════════════
+//  KEYBOARD & CLICK OUTSIDE
+// ═══════════════════════════════════════
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.bell-wrap'))document.getElementById('bell-panel').classList.remove('open');
+  if(!e.target.closest('.profile-wrap'))document.getElementById('profile-panel').classList.remove('open');
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    ['ann-modal','ann-form-modal','note-modal','note-detail-modal','gallery-form-modal','gallery-edit-modal','fav-modal','hist-modal'].forEach(id=>document.getElementById(id).style.display='none');
+    closeLightbox();
+    document.getElementById('bell-panel').classList.remove('open');
+    document.getElementById('profile-panel').classList.remove('open');
+  }
+  if(document.getElementById('lightbox').style.display!=='none'){
+    if(e.key==='ArrowLeft')lightboxNav(-1);
+    if(e.key==='ArrowRight')lightboxNav(1);
+  }
+});
+</script>
+</body>
+</html>
