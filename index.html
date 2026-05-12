@@ -14,15 +14,14 @@
   // 🔧 PEGÁ TU CONFIGURACIÓN DE FIREBASE AQUÍ
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   const firebaseConfig = {
-  apiKey: "AIzaSyA6AdNpK9nZ0wBr764RWHB7ufpsDkNOir4",
-  authDomain: "intranet-atencion-cliente.firebaseapp.com",
-  databaseURL: "https://intranet-atencion-cliente-default-rtdb.firebaseio.com",
-  projectId: "intranet-atencion-cliente",
-  storageBucket: "intranet-atencion-cliente.firebasestorage.app",
-  messagingSenderId: "734398211250",
-  appId: "1:734398211250:web:af2e07630b2819dc7f15ab",
-  measurementId: "G-90EZBCGZRQ"
-};
+    apiKey: "TU_API_KEY",
+    authDomain: "TU_PROYECTO.firebaseapp.com",
+    databaseURL: "https://TU_PROYECTO-default-rtdb.firebaseio.com",
+    projectId: "TU_PROYECTO",
+    storageBucket: "TU_PROYECTO.appspot.com",
+    messagingSenderId: "TU_SENDER_ID",
+    appId: "TU_APP_ID"
+  };
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   const app  = initializeApp(firebaseConfig);
@@ -37,7 +36,6 @@
 </script>
 
 <style>
-/* ══════════ TOKENS ══════════ */
 :root{
   --bg:#f5f4f0;--bg2:#eceae4;--bg3:#e2e0d8;--surface:#ffffff;
   --border:#e2e0d8;--border2:#d0cec7;
@@ -68,7 +66,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s}
 
-/* ══════════ LOGIN ══════════ */
+/* LOGIN */
 #login-screen{position:fixed;inset:0;background:var(--bg);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem}
 .login-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:400px;max-width:100%;box-shadow:var(--shadow-lg)}
 .login-logo{text-align:center;font-size:44px;margin-bottom:1rem}
@@ -85,22 +83,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 @keyframes spin{to{transform:rotate(360deg)}}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;margin-right:6px;vertical-align:middle}
 
-/* ══════════ LAYOUT ══════════ */
+/* LAYOUT */
 .app{max-width:1020px;margin:0 auto;padding:1.5rem 1rem}
 
-/* ══════════ HEADER ══════════ */
+/* HEADER */
 .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;padding-bottom:1rem;border-bottom:1px solid var(--border);flex-wrap:wrap;gap:10px}
 .header-left h1{font-size:20px;font-weight:600}
 .header-left p{font-size:13px;color:var(--text3);margin-top:2px}
 .header-right{display:flex;align-items:center;gap:8px}
 
-/* ══════════ TABS ══════════ */
+/* TABS */
 .tabs{display:flex;gap:4px;background:var(--bg2);padding:4px;border-radius:10px}
 .tab{padding:7px 16px;font-size:13px;border:none;background:none;cursor:pointer;border-radius:8px;color:var(--text3);font-family:inherit;transition:all .15s;white-space:nowrap}
 .tab.active{background:var(--surface);color:var(--text);font-weight:500;box-shadow:var(--shadow)}
 .section{display:none}.section.active{display:block}
 
-/* ══════════ BELL ══════════ */
+/* BELL */
 .bell-wrap{position:relative}
 .bell-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:16px;position:relative}
 .bell-btn:hover{background:var(--bg3)}
@@ -108,7 +106,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bell-dot.show{display:block}
 .bell-panel{position:absolute;top:44px;right:0;width:320px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);z-index:150;display:none;max-height:400px;overflow-y:auto}
 .bell-panel.open{display:block}
-.bell-header{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.bell-header{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--surface)}
 .bell-header span{font-size:13px;font-weight:600}
 .bell-clear{font-size:11px;color:var(--text4);background:none;border:none;cursor:pointer;font-family:inherit}
 .bell-clear:hover{color:var(--text)}
@@ -118,9 +116,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .bell-item-time{font-size:11px;color:var(--text4);margin-top:3px}
 .bell-empty{padding:2rem;text-align:center;font-size:13px;color:var(--text4)}
 
-/* ══════════ PROFILE MENU ══════════ */
+/* PROFILE */
 .profile-wrap{position:relative}
-.profile-btn{width:36px;height:36px;background:var(--blue-mid);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;font-family:inherit;flex-shrink:0}
+.profile-btn{width:36px;height:36px;background:var(--blue-mid);border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;font-family:inherit;flex-shrink:0}
 .profile-btn:hover{opacity:.88}
 .profile-panel{position:absolute;top:44px;right:0;width:240px;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);z-index:150;display:none;overflow:hidden}
 .profile-panel.open{display:block}
@@ -136,11 +134,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .profile-menu-item .menu-icon{font-size:16px;width:20px;text-align:center}
 .profile-divider{height:1px;background:var(--border);margin:4px 0}
 
-/* ══════════ THEME BTN ══════════ */
+/* THEME */
 .theme-btn{width:36px;height:36px;display:flex;align-items:center;justify-content:center;background:var(--bg2);border:1px solid var(--border);border-radius:10px;cursor:pointer;font-size:16px}
 .theme-btn:hover{background:var(--bg3)}
 
-/* ══════════ PRESENCE ══════════ */
+/* PRESENCE */
 .presence-bar{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .presence-label{font-size:12px;color:var(--text3);font-weight:500;white-space:nowrap}
 .presence-chips{display:flex;flex-wrap:wrap;gap:6px;flex:1}
@@ -150,18 +148,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .presence-dot.me{background:var(--blue-mid)}
 .presence-empty{font-size:12px;color:var(--text4);font-style:italic}
 
-/* ══════════ ANN BAR ══════════ */
+/* ANN BAR */
 .ann-bar{background:var(--blue-bg);border:1px solid var(--blue-bdr);border-radius:10px;padding:11px 16px;margin-bottom:1.25rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:opacity .15s}
 .ann-bar:hover{opacity:.85}
 .ann-bar-left{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--blue);font-weight:500}
 .ann-badge{font-size:11px;background:var(--blue-mid);color:#fff;padding:3px 10px;border-radius:20px;font-weight:500}
 
-/* ══════════ PENDING BANNER ══════════ */
+/* PENDING BANNER */
 .pending-banner{background:var(--amber-bg);border:1px solid var(--gold-bdr);border-radius:10px;padding:10px 16px;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .pending-banner-text{font-size:13px;color:var(--amber);font-weight:500}
 .pending-count{background:var(--amber);color:#fff;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
 
-/* ══════════ GLOBAL SEARCH ══════════ */
+/* GLOBAL SEARCH */
 .global-search-wrap{position:relative;margin-bottom:1rem}
 .global-search{width:100%;padding:10px 16px 10px 40px;border:1px solid var(--border2);border-radius:12px;font-size:14px;background:var(--surface);color:var(--text);font-family:inherit}
 .global-search:focus{outline:none;border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
@@ -177,7 +175,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .global-result-sub{font-size:11px;color:var(--text4)}
 .global-result-empty{padding:1.5rem;text-align:center;font-size:13px;color:var(--text4)}
 
-/* ══════════ TOOLBAR ══════════ */
+/* TOOLBAR */
 .toolbar{display:flex;gap:8px;margin-bottom:.75rem;flex-wrap:wrap;align-items:center}
 .search-box{flex:1;min-width:160px;padding:9px 14px;border:1px solid var(--border2);border-radius:10px;font-size:13px;background:var(--surface);color:var(--text);font-family:inherit}
 .search-box:focus{outline:none;border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
@@ -187,7 +185,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .export-btn:hover,.view-btn:hover{background:var(--bg2);color:var(--text)}
 .view-btn.active{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-bdr)}
 
-/* ══════════ FILTERS ══════════ */
+/* FILTERS */
 .filters-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
 .cat-filter{display:flex;gap:6px;flex-wrap:wrap;flex:1}
 .cat-pill{padding:5px 14px;font-size:12px;border:1px solid var(--border2);border-radius:20px;cursor:pointer;background:none;color:var(--text3);font-family:inherit;transition:all .15s}
@@ -196,7 +194,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .filter-select{padding:6px 10px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text);cursor:pointer}
 .filter-select:focus{outline:none;border-color:var(--blue-mid)}
 
-/* ══════════ NOTES ══════════ */
+/* NOTES */
 .notes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
 .note-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.15rem;transition:box-shadow .15s,border-color .15s;position:relative;cursor:pointer}
 .note-card:hover{box-shadow:var(--shadow);border-color:var(--border2)}
@@ -226,7 +224,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .empty-state{text-align:center;padding:3.5rem 1rem;color:var(--text4);font-size:14px;grid-column:1/-1}
 .loading{text-align:center;padding:3rem;color:var(--text4);font-size:14px;grid-column:1/-1}
 
-/* ══════════ LIST VIEW ══════════ */
+/* LIST VIEW */
 .notes-list{display:flex;flex-direction:column;gap:6px}
 .note-list-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:box-shadow .15s}
 .note-list-item:hover{box-shadow:var(--shadow);border-color:var(--border2)}
@@ -234,7 +232,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .note-list-title{font-size:14px;font-weight:500;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .note-list-meta{font-size:11px;color:var(--text4);white-space:nowrap;flex-shrink:0}
 
-/* ══════════ MODALS ══════════ */
+/* MODALS */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:1rem}
 .modal{background:var(--surface);border-radius:16px;border:1px solid var(--border);width:520px;max-width:100%;max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);display:flex;flex-direction:column}
 .modal.wide{width:720px}
@@ -245,20 +243,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .close-btn{background:none;border:none;cursor:pointer;font-size:18px;color:var(--text3);padding:4px 8px;border-radius:6px;line-height:1}
 .close-btn:hover{background:var(--bg2);color:var(--text)}
 
-/* ══════════ BUTTONS ══════════ */
+/* BUTTONS */
 .btn-primary{padding:9px 20px;background:var(--text);color:var(--surface);border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;font-weight:500}
 .btn-primary:hover{opacity:.86}
 .btn-secondary{padding:9px 20px;background:none;border:1px solid var(--border2);border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--text)}
 .btn-secondary:hover{background:var(--bg2)}
-.btn-success{padding:9px 20px;background:#0F6E56;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;font-family:inherit}
-.btn-success:hover{opacity:.86}
 .btn-xs{padding:4px 12px;font-size:12px;border:1px solid var(--border2);background:none;border-radius:6px;cursor:pointer;color:var(--text3);font-family:inherit}
 .btn-xs:hover{background:var(--bg2)}
 .btn-xs.primary{background:var(--text);color:var(--surface);border-color:var(--text)}
 .btn-xs.success{background:#0F6E56;color:#fff;border-color:#0F6E56}
 .btn-xs.danger:hover{background:var(--red-bg);color:var(--red);border-color:var(--red)}
 
-/* ══════════ FORMS ══════════ */
+/* FORMS */
 .form-group{margin-bottom:14px}
 .form-label{font-size:12px;color:var(--text3);margin-bottom:5px;display:block;font-weight:500}
 .form-input{width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)}
@@ -275,9 +271,8 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 .links-list{display:flex;flex-direction:column;gap:6px;margin-top:6px}
 .link-row{display:flex;gap:6px;align-items:center}
 .link-row input{flex:1;padding:7px 10px;border:1px solid var(--border2);border-radius:7px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text)}
-.link-row input:focus{outline:none;border-color:var(--blue-mid)}
 
-/* ══════════ NOTE DETAIL ══════════ */
+/* NOTE DETAIL */
 .note-detail-title{font-size:20px;font-weight:600;margin:10px 0 8px;line-height:1.35}
 .note-detail-meta{font-size:12px;color:var(--text4);margin-bottom:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .note-detail-body{font-size:14px;color:var(--text2);line-height:1.8;white-space:pre-line;border-top:1px solid var(--border);padding-top:16px}
@@ -309,7 +304,7 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 .history-entry:last-child{border-bottom:none}
 .history-who{font-weight:600;color:var(--text3);min-width:100px}
 
-/* ══════════ ANNOUNCEMENTS ══════════ */
+/* ANNOUNCEMENTS */
 .ann-item{padding:14px 0;border-bottom:1px solid var(--border)}
 .ann-item:last-child{border-bottom:none}
 .ann-item h3{font-size:14px;font-weight:600;margin-bottom:5px}
@@ -317,12 +312,13 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 .ann-meta{font-size:11px;color:var(--text4);margin-top:6px}
 .ann-actions{display:flex;gap:6px;margin-top:8px}
 
-/* ══════════ PANEL LÍDER ══════════ */
-.leader-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:1.5rem}
+/* LEADER PANEL */
+.leader-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:1.5rem}
 .leader-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem;text-align:center}
 .leader-stat-num{font-size:32px;font-weight:700;margin-bottom:4px}
 .leader-stat-label{font-size:12px;color:var(--text3)}
-.leader-section-title{font-size:14px;font-weight:600;margin-bottom:10px;margin-top:1.5rem;color:var(--text2);display:flex;align-items:center;gap:8px}
+.leader-section{margin-top:1.5rem}
+.leader-section-title{font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text2);display:flex;align-items:center;justify-content:space-between}
 .leader-pending-item{background:var(--surface);border:1px solid var(--gold-bdr);border-radius:10px;padding:12px 14px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
 .leader-pending-title{font-size:13px;font-weight:500}
 .leader-pending-meta{font-size:11px;color:var(--text4);margin-top:2px}
@@ -332,10 +328,10 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 .leader-activity-text{color:var(--text2);flex:1}
 .leader-activity-time{font-size:11px;color:var(--text4);white-space:nowrap}
 
-/* ══════════ USERS MANAGEMENT ══════════ */
+/* USERS TABLE */
 .user-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
 .user-row:last-child{border-bottom:none}
-.user-avatar{width:36px;height:36px;background:var(--blue-mid);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.user-avatar{width:36px;height:36px;background:var(--blue-mid);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
 .user-info{flex:1;min-width:0}
 .user-info-name{font-size:13px;font-weight:600}
 .user-info-email{font-size:11px;color:var(--text4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -343,9 +339,20 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 .user-online-dot.online{background:var(--online)}
 .user-online-dot.offline{background:var(--border2)}
 .role-select{padding:5px 10px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-family:inherit;background:var(--surface);color:var(--text);cursor:pointer}
-.role-select:focus{outline:none;border-color:var(--blue-mid)}
 
-/* ══════════ GALLERY ══════════ */
+/* ADD USER FORM */
+.add-user-form{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:16px}
+.add-user-form-title{font-size:13px;font-weight:600;margin-bottom:10px;color:var(--text2)}
+.add-user-row{display:flex;gap:8px;flex-wrap:wrap}
+.add-user-row input{flex:1;min-width:150px;padding:8px 12px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)}
+.add-user-row input:focus{outline:none;border-color:var(--blue-mid);box-shadow:0 0 0 3px rgba(55,138,221,.12)}
+
+/* REASSIGN AUTHOR */
+.reassign-bar{background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.reassign-bar label{font-size:12px;color:var(--text3);font-weight:500;white-space:nowrap}
+.reassign-select{flex:1;min-width:140px;padding:6px 10px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)}
+
+/* GALLERY */
 .gallery-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px}
 .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px}
 .gallery-item{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;position:relative;cursor:pointer;transition:box-shadow .15s,transform .15s}
@@ -363,7 +370,7 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 .upload-zone:hover{border-color:var(--blue-mid);color:var(--blue);background:var(--blue-bg)}
 .file-input{display:none}
 
-/* Lightbox */
+/* LIGHTBOX */
 .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1rem}
 .lightbox-img{max-width:90vw;max-height:72vh;object-fit:contain;border-radius:10px}
 .lightbox-info{margin-top:14px;text-align:center}
@@ -375,15 +382,14 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 .lightbox-prev{left:16px}.lightbox-next{right:16px}
 .lightbox-nav:hover{background:rgba(255,255,255,.22)}
 
-/* ══════════ PROFILE SECTIONS ══════════ */
-.section-title{font-size:16px;font-weight:600;margin-bottom:1rem}
+/* MY HISTORY */
 .my-history-item{padding:10px 0;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start}
 .my-history-item:last-child{border-bottom:none}
 .my-history-icon{font-size:16px;flex-shrink:0;margin-top:1px}
 .my-history-text{flex:1;font-size:13px;color:var(--text2);line-height:1.5}
 .my-history-time{font-size:11px;color:var(--text4);margin-top:2px}
 
-/* ══════════ TOAST ══════════ */
+/* TOAST */
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--surface);font-size:13px;padding:10px 20px;border-radius:30px;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-lg)}
 .toast.show{opacity:1}
 
@@ -416,7 +422,6 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
       <p>Atención al cliente</p>
     </div>
     <div class="header-right">
-      <!-- BELL -->
       <div class="bell-wrap">
         <button class="bell-btn" onclick="toggleBell()" title="Notificaciones">
           🔔<span class="bell-dot" id="bell-dot"></span>
@@ -429,55 +434,41 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
           <div id="bell-list"><div class="bell-empty">Sin notificaciones</div></div>
         </div>
       </div>
-      <!-- THEME -->
-      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn" title="Cambiar modo">🌙</button>
-      <!-- TABS -->
+      <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">🌙</button>
       <div class="tabs">
         <button class="tab active" onclick="switchTab('notas',this)">Notas</button>
         <button class="tab" onclick="switchTab('galeria',this)">Galería</button>
         <button class="tab" id="tab-lider" style="display:none" onclick="switchTab('lider',this)">👑 Panel líder</button>
       </div>
-      <!-- PROFILE -->
       <div class="profile-wrap">
-        <button class="profile-btn" id="profile-btn" onclick="toggleProfile()" title="Mi perfil">?</button>
+        <button class="profile-btn" id="profile-btn" onclick="toggleProfile()">?</button>
         <div class="profile-panel" id="profile-panel">
           <div class="profile-info">
             <div class="profile-info-name" id="profile-name">—</div>
             <div class="profile-info-email" id="profile-email">—</div>
             <span class="profile-info-role" id="profile-role-badge">—</span>
           </div>
-          <button class="profile-menu-item" onclick="openSection('favoritos')">
-            <span class="menu-icon">⭐</span> Mis favoritos
-          </button>
-          <button class="profile-menu-item" onclick="openSection('historial')">
-            <span class="menu-icon">🕑</span> Mi historial
-          </button>
+          <button class="profile-menu-item" onclick="openFavModal()"><span class="menu-icon">⭐</span>Mis favoritos</button>
+          <button class="profile-menu-item" onclick="openHistModal()"><span class="menu-icon">🕑</span>Mi historial</button>
           <div class="profile-divider"></div>
-          <button class="profile-menu-item danger" onclick="doLogout()">
-            <span class="menu-icon">🚪</span> Cerrar sesión
-          </button>
+          <button class="profile-menu-item danger" onclick="doLogout()"><span class="menu-icon">🚪</span>Cerrar sesión</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- PRESENCE -->
   <div class="presence-bar">
     <span class="presence-label">🟢 En línea ahora:</span>
-    <div class="presence-chips" id="presence-chips">
-      <span class="presence-empty">Conectando…</span>
-    </div>
+    <div class="presence-chips" id="presence-chips"><span class="presence-empty">Conectando…</span></div>
   </div>
 
-  <!-- ANN BAR -->
   <div class="ann-bar" onclick="openAnn()">
     <div class="ann-bar-left">📢 <span>Información del equipo</span></div>
     <span class="ann-badge" id="ann-badge">…</span>
   </div>
 
-  <!-- PENDING BANNER -->
   <div class="pending-banner" id="pending-banner" style="display:none">
-    <span class="pending-banner-text">⏳ Hay contenido esperando tu aprobación</span>
+    <span class="pending-banner-text">⏳ Hay notas esperando tu aprobación</span>
     <span class="pending-count" id="pending-count">0</span>
   </div>
 
@@ -524,12 +515,37 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
   <!-- PANEL LÍDER -->
   <div class="section" id="sec-lider">
     <div class="leader-grid" id="leader-stats"></div>
-    <div class="leader-section-title">⏳ Pendientes de aprobación</div>
-    <div id="leader-pending"></div>
-    <div class="leader-section-title">👥 Gestión de usuarios y roles</div>
-    <div id="leader-users"><div class="loading">Cargando usuarios…</div></div>
-    <div class="leader-section-title">📋 Actividad reciente</div>
-    <div id="leader-activity"></div>
+
+    <div class="leader-section">
+      <div class="leader-section-title">⏳ Pendientes de aprobación</div>
+      <div id="leader-pending"></div>
+    </div>
+
+    <div class="leader-section">
+      <div class="leader-section-title">
+        👥 Usuarios del equipo
+        <button class="btn-xs primary" onclick="toggleAddUserForm()">+ Agregar usuario</button>
+      </div>
+      <div class="add-user-form" id="add-user-form" style="display:none">
+        <div class="add-user-form-title">Nuevo usuario del equipo</div>
+        <div class="add-user-row">
+          <input id="new-user-name" placeholder="Nombre completo" type="text">
+          <input id="new-user-email" placeholder="Email" type="email">
+          <select id="new-user-role" style="padding:8px 10px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:inherit;background:var(--surface);color:var(--text)">
+            <option value="colaborador">Colaborador</option>
+            <option value="lider">Líder</option>
+          </select>
+          <button class="btn-xs success" onclick="addTeamUser()">Agregar</button>
+          <button class="btn-xs" onclick="toggleAddUserForm()">Cancelar</button>
+        </div>
+      </div>
+      <div id="leader-users"><div class="loading">Cargando usuarios…</div></div>
+    </div>
+
+    <div class="leader-section">
+      <div class="leader-section-title">📋 Actividad reciente</div>
+      <div id="leader-activity"></div>
+    </div>
   </div>
 </div>
 
@@ -548,141 +564,105 @@ textarea.form-input{resize:vertical;min-height:90px;line-height:1.6}
 </div>
 
 <!-- MODAL FAVORITOS -->
-<div class="overlay" id="fav-modal" style="display:none" onclick="if(event.target===this)closeFav()">
-  <div class="modal wide">
-    <div class="modal-header"><h2>⭐ Mis favoritos</h2><button class="close-btn" onclick="closeFav()">✕</button></div>
-    <div class="modal-body" id="fav-body"></div>
-    <div class="modal-footer"><button class="btn-secondary" onclick="closeFav()">Cerrar</button></div>
-  </div>
+<div class="overlay" id="fav-modal" style="display:none" onclick="if(event.target===this)closeFavModal()">
+  <div class="modal wide"><div class="modal-header"><h2>⭐ Mis favoritos</h2><button class="close-btn" onclick="closeFavModal()">✕</button></div>
+  <div class="modal-body" id="fav-body"></div>
+  <div class="modal-footer"><button class="btn-secondary" onclick="closeFavModal()">Cerrar</button></div></div>
 </div>
 
 <!-- MODAL HISTORIAL -->
-<div class="overlay" id="hist-modal" style="display:none" onclick="if(event.target===this)closeHist()">
-  <div class="modal">
-    <div class="modal-header"><h2>🕑 Mi historial</h2><button class="close-btn" onclick="closeHist()">✕</button></div>
-    <div class="modal-body" id="hist-body"></div>
-    <div class="modal-footer"><button class="btn-secondary" onclick="closeHist()">Cerrar</button></div>
-  </div>
+<div class="overlay" id="hist-modal" style="display:none" onclick="if(event.target===this)closeHistModal()">
+  <div class="modal"><div class="modal-header"><h2>🕑 Mi historial</h2><button class="close-btn" onclick="closeHistModal()">✕</button></div>
+  <div class="modal-body" id="hist-body"></div>
+  <div class="modal-footer"><button class="btn-secondary" onclick="closeHistModal()">Cerrar</button></div></div>
 </div>
 
 <!-- MODAL ANUNCIOS -->
 <div class="overlay" id="ann-modal" style="display:none" onclick="if(event.target===this)closeAnn()">
-  <div class="modal">
-    <div class="modal-header"><h2>📢 Información del equipo</h2><button class="close-btn" onclick="closeAnn()">✕</button></div>
-    <div class="modal-body" id="ann-list"></div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="openAnnForm()">+ Nuevo anuncio</button>
-      <button class="btn-secondary" onclick="closeAnn()">Cerrar</button>
-    </div>
-  </div>
+  <div class="modal"><div class="modal-header"><h2>📢 Información del equipo</h2><button class="close-btn" onclick="closeAnn()">✕</button></div>
+  <div class="modal-body" id="ann-list"></div>
+  <div class="modal-footer"><button class="btn-secondary" onclick="openAnnForm()">+ Nuevo anuncio</button><button class="btn-secondary" onclick="closeAnn()">Cerrar</button></div></div>
 </div>
 
 <!-- MODAL FORM ANUNCIO -->
 <div class="overlay" id="ann-form-modal" style="display:none" onclick="if(event.target===this)closeAnnForm()">
-  <div class="modal">
-    <div class="modal-header"><h2 id="ann-form-title">Nuevo anuncio</h2><button class="close-btn" onclick="closeAnnForm()">✕</button></div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="ann-title" placeholder="Título"></div>
-      <div class="form-group"><label class="form-label">Contenido</label><textarea class="form-input" id="ann-body" placeholder="Detalle…"></textarea></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeAnnForm()">Cancelar</button>
-      <button class="btn-primary" onclick="saveAnn()">Publicar</button>
-    </div>
+  <div class="modal"><div class="modal-header"><h2 id="ann-form-title">Nuevo anuncio</h2><button class="close-btn" onclick="closeAnnForm()">✕</button></div>
+  <div class="modal-body">
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="ann-title" placeholder="Título"></div>
+    <div class="form-group"><label class="form-label">Contenido</label><textarea class="form-input" id="ann-body" placeholder="Detalle…"></textarea></div>
   </div>
+  <div class="modal-footer"><button class="btn-secondary" onclick="closeAnnForm()">Cancelar</button><button class="btn-primary" onclick="saveAnn()">Publicar</button></div></div>
 </div>
 
 <!-- MODAL NOTA FORM -->
 <div class="overlay" id="note-modal" style="display:none" onclick="if(event.target===this)closeNoteForm()">
-  <div class="modal">
-    <div class="modal-header"><h2 id="note-modal-title">Nueva nota</h2><button class="close-btn" onclick="closeNoteForm()">✕</button></div>
-    <div class="modal-body">
-      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="note-title" placeholder="Título de la nota"></div>
-      <div class="form-row">
-        <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="note-cat"></select></div>
-        <div class="form-group"><label class="form-label">Estado</label><select class="form-input" id="note-status"></select></div>
-      </div>
-      <div class="form-group"><label class="form-label">Contenido</label>
-        <textarea class="form-input" id="note-body" placeholder="Escribí el contenido…" style="min-height:130px"></textarea></div>
-      <div class="form-group">
-        <label class="form-label">Etiquetas (Enter para agregar)</label>
-        <div class="tags-input-wrap">
-          <input class="form-input" id="tag-input" placeholder="Ej: urgente…" onkeydown="handleTagKey(event)" style="flex:1">
-          <button class="btn-secondary" style="padding:9px 14px" onclick="addTag()">+</button>
-        </div>
-        <div class="tags-list" id="tags-list"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Links útiles</label>
-        <div class="links-list" id="links-list"></div>
-        <button class="btn-xs" style="margin-top:6px" onclick="addLinkRow()">+ Agregar link</button>
-      </div>
-      <div class="checkbox-row"><input type="checkbox" id="note-pin"><label for="note-pin">📌 Fijar esta nota arriba</label></div>
+  <div class="modal"><div class="modal-header"><h2 id="note-modal-title">Nueva nota</h2><button class="close-btn" onclick="closeNoteForm()">✕</button></div>
+  <div class="modal-body">
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="note-title" placeholder="Título de la nota"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="note-cat"></select></div>
+      <div class="form-group"><label class="form-label">Estado</label><select class="form-input" id="note-status"></select></div>
     </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeNoteForm()">Cancelar</button>
-      <button class="btn-primary" onclick="saveNote()">Guardar</button>
+    <div class="form-group"><label class="form-label">Contenido</label>
+      <textarea class="form-input" id="note-body" placeholder="Escribí el contenido…" style="min-height:130px"></textarea></div>
+    <div class="form-group">
+      <label class="form-label">Etiquetas (Enter para agregar)</label>
+      <div class="tags-input-wrap">
+        <input class="form-input" id="tag-input" placeholder="Ej: urgente…" onkeydown="handleTagKey(event)" style="flex:1">
+        <button class="btn-secondary" style="padding:9px 14px" onclick="addTag()">+</button>
+      </div>
+      <div class="tags-list" id="tags-list"></div>
     </div>
+    <div class="form-group">
+      <label class="form-label">Links útiles</label>
+      <div class="links-list" id="links-list"></div>
+      <button class="btn-xs" style="margin-top:6px" onclick="addLinkRow()">+ Agregar link</button>
+    </div>
+    <div class="checkbox-row"><input type="checkbox" id="note-pin"><label for="note-pin">📌 Fijar esta nota arriba</label></div>
   </div>
+  <div class="modal-footer"><button class="btn-secondary" onclick="closeNoteForm()">Cancelar</button><button class="btn-primary" onclick="saveNote()">Guardar</button></div></div>
 </div>
 
 <!-- MODAL NOTA DETALLE -->
 <div class="overlay" id="note-detail-modal" style="display:none" onclick="if(event.target===this)closeDetail()">
-  <div class="modal wide">
-    <div class="modal-header">
-      <h2 style="font-size:13px;color:var(--text3);font-weight:400" id="detail-breadcrumb">Nota</h2>
-      <button class="close-btn" onclick="closeDetail()">✕</button>
-    </div>
-    <div class="modal-body" id="note-detail-body"></div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="editFromDetail()">✏️ Editar</button>
-      <button class="btn-secondary" onclick="closeDetail()">Cerrar</button>
-    </div>
-  </div>
+  <div class="modal wide"><div class="modal-header">
+    <h2 style="font-size:13px;color:var(--text3);font-weight:400" id="detail-breadcrumb">Nota</h2>
+    <button class="close-btn" onclick="closeDetail()">✕</button></div>
+  <div class="modal-body" id="note-detail-body"></div>
+  <div class="modal-footer"><button class="btn-secondary" onclick="editFromDetail()">✏️ Editar</button><button class="btn-secondary" onclick="closeDetail()">Cerrar</button></div></div>
 </div>
 
 <!-- MODAL GALERÍA FORM -->
 <div class="overlay" id="gallery-form-modal" style="display:none" onclick="if(event.target===this)closeGalleryForm()">
-  <div class="modal">
-    <div class="modal-header"><h2>Subir imagen</h2><button class="close-btn" onclick="closeGalleryForm()">✕</button></div>
-    <div class="modal-body">
-      <input type="file" id="gallery-file-input" class="file-input" accept="image/*" onchange="previewGalleryFile(event)">
-      <div class="upload-zone" id="gallery-upload-zone" onclick="document.getElementById('gallery-file-input').click()">
-        <div style="font-size:28px;margin-bottom:8px">🖼️</div>Hacé clic para elegir una imagen</div>
-      <img id="gallery-preview" src="" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:14px;display:none">
-      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="gallery-title" placeholder="Título de la imagen"></div>
-      <div class="form-group"><label class="form-label">Descripción (opcional)</label><input class="form-input" id="gallery-desc" placeholder="Descripción"></div>
-      <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="gallery-cat-select"></select></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeGalleryForm()">Cancelar</button>
-      <button class="btn-primary" onclick="saveGalleryItem()">Subir</button>
-    </div>
+  <div class="modal"><div class="modal-header"><h2>Subir imagen</h2><button class="close-btn" onclick="closeGalleryForm()">✕</button></div>
+  <div class="modal-body">
+    <input type="file" id="gallery-file-input" class="file-input" accept="image/*" onchange="previewGalleryFile(event)">
+    <div class="upload-zone" id="gallery-upload-zone" onclick="document.getElementById('gallery-file-input').click()"><div style="font-size:28px;margin-bottom:8px">🖼️</div>Hacé clic para elegir una imagen</div>
+    <img id="gallery-preview" src="" alt="" style="width:100%;height:160px;object-fit:cover;border-radius:10px;margin-bottom:14px;display:none">
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="gallery-title" placeholder="Título de la imagen"></div>
+    <div class="form-group"><label class="form-label">Descripción (opcional)</label><input class="form-input" id="gallery-desc" placeholder="Descripción"></div>
+    <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="gallery-cat-select"></select></div>
   </div>
+  <div class="modal-footer"><button class="btn-secondary" onclick="closeGalleryForm()">Cancelar</button><button class="btn-primary" onclick="saveGalleryItem()">Subir</button></div></div>
 </div>
 
 <!-- MODAL EDITAR IMAGEN -->
 <div class="overlay" id="gallery-edit-modal" style="display:none" onclick="if(event.target===this)closeGalleryEdit()">
-  <div class="modal">
-    <div class="modal-header"><h2>Editar imagen</h2><button class="close-btn" onclick="closeGalleryEdit()">✕</button></div>
-    <div class="modal-body">
-      <img id="gallery-edit-preview" src="" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:14px">
-      <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="gallery-edit-title"></div>
-      <div class="form-group"><label class="form-label">Descripción</label><input class="form-input" id="gallery-edit-desc"></div>
-      <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="gallery-edit-cat"></select></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-secondary" onclick="closeGalleryEdit()">Cancelar</button>
-      <button class="btn-primary" onclick="saveGalleryEdit()">Guardar</button>
-    </div>
+  <div class="modal"><div class="modal-header"><h2>Editar imagen</h2><button class="close-btn" onclick="closeGalleryEdit()">✕</button></div>
+  <div class="modal-body">
+    <img id="gallery-edit-preview" src="" alt="" style="width:100%;height:150px;object-fit:cover;border-radius:10px;margin-bottom:14px">
+    <div class="form-group"><label class="form-label">Título</label><input class="form-input" id="gallery-edit-title"></div>
+    <div class="form-group"><label class="form-label">Descripción</label><input class="form-input" id="gallery-edit-desc"></div>
+    <div class="form-group"><label class="form-label">Categoría</label><select class="form-input" id="gallery-edit-cat"></select></div>
   </div>
+  <div class="modal-footer"><button class="btn-secondary" onclick="closeGalleryEdit()">Cancelar</button><button class="btn-primary" onclick="saveGalleryEdit()">Guardar</button></div></div>
 </div>
 
 <script>
 // ═══════════════════════════════════════
 //  CONFIG
 // ═══════════════════════════════════════
-const INITIAL_LIDER = "juan.mendoza@bplay.com.ar"; // primer líder por defecto
+const INITIAL_LIDER = "juan.mendoza@bplay.com.ar";
 const CATEGORIES = ["Procedimientos","Documentación","Depósitos","Retiros","Otros"];
 const CAT_COLORS = {
   "Procedimientos":{bg:"#E1F5EE",color:"#0F6E56"},
@@ -701,22 +681,29 @@ const STATUS = {
   obsoleto: {label:"Obsoleto",        cls:"status-obsoleto"},
   pendiente:{label:"Pend. aprobación",cls:"status-pendiente"},
 };
-const LS = {theme:'intranet_theme', notifs:'intranet_notifs', favs:'intranet_favs', hist:'intranet_hist'};
+const LS = {theme:'intranet_theme',notifs:'intranet_notifs_v8',favs:'intranet_favs',hist:'intranet_hist'};
+const PRESENCE_TIMEOUT = 50000; // 50s sin ping = offline
 const NEW_DAYS = 7;
-const PRESENCE_TIMEOUT = 45000; // 45 segundos sin ping = desconectado
 
 let currentUser='', currentEmail='', isLider=false;
 let sessionId = 'sess_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,5);
-let notes={}, announcements={}, gallery={}, usersRoles={};
-let presenceData = {};
+let notes={}, announcements={}, gallery={}, teamUsers={};
+let presenceData={};
 let activeCategory="Todas", activeGalleryCat="Todas";
 let currentTags=[], currentLinks=[];
 let editingNoteId=null, editingAnnId=null, editingGalleryId=null, detailNoteId=null;
 let lightboxIds=[], lightboxIdx=0, galleryFileData=null;
 let viewMode='grid';
-let notifications=[], readNotifIds=new Set();
+
+// ── NOTIFICATIONS: stored in Firebase per user, keyed by noteId/itemId
+// so we only notify about truly NEW items added after last seen ──
+let lastSeenTs = 0; // timestamp of last time user had the app open
+let notifications=[];
+let readNotifIds=new Set();
+
 let favorites=new Set(), myHistory=[];
 let presencePingInterval=null;
+let appInitialized=false; // prevents fake notifications on first load
 
 // ═══════════════════════════════════════
 //  UTILS
@@ -732,7 +719,7 @@ const lid=()=>'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const catColor=cat=>CAT_COLORS[cat]||{bg:"#F1EFE8",color:"#5F5E5A"};
 const lsLoad=(k,d)=>{try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch{return d}};
 const lsSave=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
-const initials=name=>name?name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2):'?';
+const initials=name=>name?name.split(' ').filter(Boolean).map(w=>w[0]).join('').toUpperCase().slice(0,2):'?';
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600)}
 
 // ═══════════════════════════════════════
@@ -756,7 +743,7 @@ function doLogin(){
   window._signInWithEmailAndPassword(window._auth,email,pass).catch(err=>{
     btn.disabled=false;btn.textContent='Ingresar';
     const msgs={'auth/invalid-credential':'Email o contraseña incorrectos.','auth/user-not-found':'Usuario no encontrado.','auth/wrong-password':'Contraseña incorrecta.','auth/too-many-requests':'Demasiados intentos. Esperá unos minutos.'};
-    showLoginError(msgs[err.code]||'Error al ingresar. Intentá de nuevo.');
+    showLoginError(msgs[err.code]||'Error al ingresar.');
   });
 }
 function showLoginError(msg){const el=document.getElementById('login-error');el.textContent='⚠️ '+msg;el.style.display='block'}
@@ -764,27 +751,31 @@ function showLoginError(msg){const el=document.getElementById('login-error');el.
 function doLogout(){
   if(!confirm('¿Salís de la sesión?'))return;
   clearInterval(presencePingInterval);
+  // save last seen timestamp
+  lsSave('intranet_last_seen_'+currentEmail, nowTS());
   if(window._db)window._remove(window._ref(window._db,'presence/'+sessionId));
   if(window._auth)window._signOut(window._auth);
   document.getElementById('main-app').style.display='none';
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('login-password').value='';
   document.getElementById('profile-panel').classList.remove('open');
+  appInitialized=false;
 }
 
 window.addEventListener('firebase-ready',()=>{
-  window._onAuthStateChanged(window._auth, async user=>{
+  window._onAuthStateChanged(window._auth,user=>{
     if(user){
-      currentEmail = user.email||'';
-      currentUser  = user.displayName||user.email.split('@')[0];
+      currentEmail=user.email||'';
+      currentUser=user.displayName||user.email.split('@')[0];
       document.getElementById('login-screen').style.display='none';
       document.getElementById('main-app').style.display='block';
       document.getElementById('login-btn').disabled=false;
       document.getElementById('login-btn').textContent='Ingresar';
-      // set initial avatar
       document.getElementById('profile-btn').textContent=initials(currentUser);
       document.getElementById('profile-name').textContent=currentUser;
       document.getElementById('profile-email').textContent=currentEmail;
+      // load last seen timestamp for this user
+      lastSeenTs = lsLoad('intranet_last_seen_'+currentEmail, 0);
       loadLocalData();
       setupFirebase();
     } else {
@@ -801,43 +792,87 @@ function loadLocalData(){
   readNotifIds=new Set(lsLoad(LS.notifs,[]));
   favorites=new Set(lsLoad(LS.favs,[]));
   myHistory=lsLoad(LS.hist,[]);
+  notifications=lsLoad('intranet_notifs_list_'+currentEmail,[]);
 }
+function saveNotifList(){lsSave('intranet_notifs_list_'+currentEmail,notifications.slice(0,50))}
 
 // ═══════════════════════════════════════
 //  FIREBASE SETUP
 // ═══════════════════════════════════════
 function setupFirebase(){
-  const db=window._db, ref=window._ref;
-  // load roles first to know if lider
-  window._onValue(ref(db,'roles'), s=>{
-    usersRoles = s.val()||{};
-    // check role for current user
-    const myRole = usersRoles[btoa(currentEmail)]?.role || (currentEmail===INITIAL_LIDER?'lider':'colaborador');
-    isLider = myRole==='lider';
-    // if initial lider and not yet in roles, register them
-    if(currentEmail===INITIAL_LIDER && !usersRoles[btoa(currentEmail)]){
-      window._set(ref(db,'roles/'+btoa(currentEmail)),{email:currentEmail,name:currentUser,role:'lider'});
+  const db=window._db,ref=window._ref;
+
+  // 1. Load team users & roles first
+  window._onValue(ref(db,'team_users'),s=>{
+    teamUsers=s.val()||{};
+    // auto-register initial lider if not present
+    const liderKey=btoa(INITIAL_LIDER);
+    if(!teamUsers[liderKey]){
+      window._set(ref(db,'team_users/'+liderKey),{email:INITIAL_LIDER,name:currentEmail===INITIAL_LIDER?currentUser:'Juan Mendoza',role:'lider',addedAt:today()});
     }
+    // check my role
+    const myKey=btoa(currentEmail);
+    const myRole=teamUsers[myKey]?.role||(currentEmail===INITIAL_LIDER?'lider':'colaborador');
+    isLider=myRole==='lider';
     updateRoleUI();
-    renderLeaderPanel();
-    renderNotes();
+    renderUsersPanel();
   });
-  window._onValue(ref(db,'notes'), s=>{
-    const prev=Object.keys(notes);
-    notes=s.val()||defaultNotes();
-    Object.values(notes).forEach(n=>{
-      if(!prev.includes(n.id)&&n.author!==currentUser&&isNew(n.date)){
-        addNotification(`📝 ${n.author} agregó: "${n.title}"`);
-      }
-    });
+
+  // 2. Notes — use a flag to skip notifications on initial load
+  window._onValue(ref(db,'notes'),s=>{
+    const newNotes=s.val()||defaultNotes();
+    if(appInitialized){
+      // only notify about notes created AFTER lastSeenTs and not by me
+      Object.values(newNotes).forEach(n=>{
+        if(!notes[n.id] && n.author!==currentUser){
+          const noteTs=new Date(n.date).getTime();
+          if(noteTs>lastSeenTs){
+            addNotification(`📝 ${n.author} agregó: "${n.title}"`);
+          }
+        }
+      });
+    }
+    notes=newNotes;
     renderNotes();renderCatFilter();updatePendingBanner();updateAuthorFilter();
+    if(!appInitialized){
+      // mark initialization done and update lastSeen
+      setTimeout(()=>{
+        appInitialized=true;
+        lsSave('intranet_last_seen_'+currentEmail, nowTS());
+      }, 2000);
+    }
   });
-  window._onValue(ref(db,'announcements'), s=>{announcements=s.val()||{};updateAnnBadge()});
-  window._onValue(ref(db,'gallery'),       s=>{gallery=s.val()||{};renderGallery()});
-  window._onValue(ref(db,'presence'),      s=>{presenceData=s.val()||{};renderPresence()});
-  window._onValue(ref(db,'activity'),      s=>{renderLeaderActivity(s.val()||{})});
+
+  window._onValue(ref(db,'announcements'),s=>{
+    const newAnn=s.val()||{};
+    if(appInitialized){
+      Object.keys(newAnn).forEach(id=>{
+        if(!announcements[id]&&newAnn[id].author!==currentUser){
+          addNotification(`📢 Nuevo anuncio: "${newAnn[id].title}"`);
+        }
+      });
+    }
+    announcements=newAnn;updateAnnBadge();
+  });
+
+  window._onValue(ref(db,'gallery'),s=>{
+    const newGallery=s.val()||{};
+    if(appInitialized){
+      Object.keys(newGallery).forEach(id=>{
+        if(!gallery[id]&&newGallery[id].author!==currentUser){
+          addNotification(`🖼️ ${newGallery[id].author} subió: "${newGallery[id].title||'una imagen'}"`);
+        }
+      });
+    }
+    gallery=newGallery;renderGallery();
+  });
+
+  window._onValue(ref(db,'presence'),s=>{presenceData=s.val()||{};renderPresence()});
+  window._onValue(ref(db,'activity'),s=>{renderLeaderActivity(s.val()||{})});
+
   registerPresence();
   populateCatSelects();
+  renderBell();
 }
 
 function updateRoleUI(){
@@ -848,37 +883,31 @@ function updateRoleUI(){
 }
 
 // ═══════════════════════════════════════
-//  PRESENCE — solo activos con ping reciente
+//  PRESENCE
 // ═══════════════════════════════════════
 function registerPresence(){
-  const ref=window._ref, db=window._db;
+  const ref=window._ref,db=window._db;
   const presRef=ref(db,'presence/'+sessionId);
-  const ping=()=>{
-    window._set(presRef,{name:currentUser,email:currentEmail,ts:nowTS()});
-  };
+  const ping=()=>window._set(presRef,{name:currentUser,email:currentEmail,ts:nowTS()});
   ping();
   window._onDisconnect(presRef).remove();
-  // ping each 30s to stay active
-  presencePingInterval=setInterval(ping, 30000);
-  // remove on page hide/close
+  presencePingInterval=setInterval(ping,30000);
   document.addEventListener('visibilitychange',()=>{
-    if(document.hidden){window._remove(presRef)}
-    else{ping()}
+    if(document.hidden){
+      window._remove(presRef);
+      lsSave('intranet_last_seen_'+currentEmail,nowTS());
+    }else{ping()}
   });
 }
 
 function renderPresence(){
   const chips=document.getElementById('presence-chips');
   const now=nowTS();
-  // only show users with a ping within PRESENCE_TIMEOUT ms
   const active=Object.values(presenceData).filter(u=>u.ts&&(now-u.ts)<PRESENCE_TIMEOUT);
   if(!active.length){chips.innerHTML='<span class="presence-empty">Solo vos en línea</span>';return}
   chips.innerHTML=active.map(u=>{
     const isMe=u.email===currentEmail;
-    return`<span class="presence-chip">
-      <span class="presence-dot ${isMe?'me':'active'}"></span>
-      ${esc(u.name)}${isMe?' (vos)':''}
-    </span>`;
+    return`<span class="presence-chip"><span class="presence-dot ${isMe?'me':'active'}"></span>${esc(u.name)}${isMe?' (vos)':''}</span>`;
   }).join('');
 }
 
@@ -887,25 +916,28 @@ function dbRemove(path){if(window._db)window._remove(window._ref(window._db,path
 function logActivity(action,detail){dbSet('activity/'+lid(),{who:currentUser,action,detail,date:nowISO()})}
 
 // ═══════════════════════════════════════
-//  NOTIFICATIONS
+//  NOTIFICATIONS — solo actividad real nueva
 // ═══════════════════════════════════════
 function addNotification(text){
   const id=lid();
   notifications.unshift({id,text,date:nowISO()});
   if(notifications.length>50)notifications=notifications.slice(0,50);
+  saveNotifList();
   renderBell();
 }
+
 function renderBell(){
   const unread=notifications.filter(n=>!readNotifIds.has(n.id));
   document.getElementById('bell-dot').className='bell-dot'+(unread.length?' show':'');
   const list=document.getElementById('bell-list');
-  if(!notifications.length){list.innerHTML='<div class="bell-empty">Sin notificaciones</div>';return}
+  if(!notifications.length){list.innerHTML='<div class="bell-empty">Sin notificaciones nuevas</div>';return}
   list.innerHTML=notifications.slice(0,20).map(n=>
     `<div class="bell-item${readNotifIds.has(n.id)?'':' unread'}">
       <div>${esc(n.text)}</div>
       <div class="bell-item-time">${fmtDT(n.date)}</div>
     </div>`).join('');
 }
+
 function toggleBell(){
   document.getElementById('profile-panel').classList.remove('open');
   const panel=document.getElementById('bell-panel');
@@ -917,7 +949,10 @@ function toggleBell(){
     renderBell();
   }
 }
-function clearNotifs(){notifications=[];renderBell();showToast('Notificaciones limpiadas')}
+function clearNotifs(){
+  notifications=[];saveNotifList();renderBell();
+  showToast('Notificaciones limpiadas');
+}
 
 // ═══════════════════════════════════════
 //  PROFILE MENU
@@ -926,21 +961,26 @@ function toggleProfile(){
   document.getElementById('bell-panel').classList.remove('open');
   document.getElementById('profile-panel').classList.toggle('open');
 }
-function openSection(sec){
+function openFavModal(){
   document.getElementById('profile-panel').classList.remove('open');
-  if(sec==='favoritos'){renderFavModal();document.getElementById('fav-modal').style.display='flex'}
-  if(sec==='historial'){renderHistModal();document.getElementById('hist-modal').style.display='flex'}
+  renderFavModal();
+  document.getElementById('fav-modal').style.display='flex';
 }
-function closeFav(){document.getElementById('fav-modal').style.display='none'}
-function closeHist(){document.getElementById('hist-modal').style.display='none'}
+function closeFavModal(){document.getElementById('fav-modal').style.display='none'}
+function openHistModal(){
+  document.getElementById('profile-panel').classList.remove('open');
+  renderHistModal();
+  document.getElementById('hist-modal').style.display='flex';
+}
+function closeHistModal(){document.getElementById('hist-modal').style.display='none'}
 
 function renderFavModal(){
   const arr=Object.values(notes||{}).filter(n=>favorites.has(n.id));
   const body=document.getElementById('fav-body');
-  if(!arr.length){body.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text4);font-size:13px">No tenés favoritos aún.<br>Hacé clic en ⭐ en cualquier nota para guardarla acá.</div>';return}
+  if(!arr.length){body.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text4);font-size:13px">No tenés favoritos aún.<br>Hacé clic en ⭐ en cualquier nota.</div>';return}
   body.innerHTML=`<div class="notes-grid">${arr.map(n=>{
     const col=catColor(n.category);const st=STATUS[n.status||'vigente']||STATUS.vigente;
-    return`<div class="note-card favorited" onclick="closeFav();openDetail('${n.id}')">
+    return`<div class="note-card favorited" onclick="closeFavModal();openDetail('${n.id}')">
       <div><span class="note-cat-badge" style="background:${col.bg};color:${col.color}">${esc(n.category)}</span><span class="status-badge ${st.cls}">${st.label}</span></div>
       <h3 style="padding-right:0">${esc(n.title)}</h3>
       <div class="note-preview">${esc(n.body)}</div>
@@ -954,7 +994,7 @@ function renderFavModal(){
 
 function renderHistModal(){
   const body=document.getElementById('hist-body');
-  if(!myHistory.length){body.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text4);font-size:13px">Sin actividad registrada aún.</div>';return}
+  if(!myHistory.length){body.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text4);font-size:13px">Sin actividad aún.</div>';return}
   body.innerHTML=myHistory.slice(0,60).map(h=>`
     <div class="my-history-item">
       <span class="my-history-icon">${h.icon}</span>
@@ -989,7 +1029,7 @@ function populateCatSelects(){
 }
 
 // ═══════════════════════════════════════
-//  VIEW MODE
+//  VIEW MODE & FILTERS
 // ═══════════════════════════════════════
 function setView(mode){
   viewMode=mode;
@@ -997,7 +1037,6 @@ function setView(mode){
   document.getElementById('view-list-btn').classList.toggle('active',mode==='list');
   renderNotes();
 }
-
 function updateAuthorFilter(){
   const sel=document.getElementById('filter-author');
   const cur=sel.value;
@@ -1014,8 +1053,8 @@ function globalSearch(q){
   if(!q||q.length<2){res.classList.remove('show');return}
   const ql=q.toLowerCase();const results=[];
   Object.values(notes||{}).forEach(n=>{if([n.title,n.body,n.author,...(n.tags||[])].some(x=>(x||'').toLowerCase().includes(ql)))results.push({icon:'📝',title:n.title,sub:n.category+' · '+fmtDate(n.date),action:`openDetail('${n.id}')`})});
-  Object.values(gallery||{}).forEach(g=>{if([g.title,g.desc,g.cat].some(x=>(x||'').toLowerCase().includes(ql)))results.push({icon:'🖼️',title:g.title||'Sin título',sub:'Galería · '+fmtDate(g.date),action:`openLightbox('${g.id}')`})});
-  Object.values(announcements||{}).forEach(a=>{if([a.title,a.body].some(x=>(x||'').toLowerCase().includes(ql)))results.push({icon:'📢',title:a.title,sub:'Anuncio · '+fmtDate(a.date),action:`openAnn()`})});
+  Object.values(gallery||{}).forEach(g=>{if([g.title,g.desc,g.cat].some(x=>(x||'').toLowerCase().includes(ql)))results.push({icon:'🖼️',title:g.title||'Sin título',sub:'Galería',action:`openLightbox('${g.id}')`})});
+  Object.values(announcements||{}).forEach(a=>{if([a.title,a.body].some(x=>(x||'').toLowerCase().includes(ql)))results.push({icon:'📢',title:a.title,sub:'Anuncio',action:`openAnn()`})});
   if(!results.length){res.innerHTML='<div class="global-result-empty">Sin resultados para "'+esc(q)+'"</div>';res.classList.add('show');return}
   res.innerHTML=results.slice(0,8).map(r=>`<div class="global-result-item" onclick="${r.action}"><span class="global-result-icon">${r.icon}</span><div class="global-result-text"><div class="global-result-title">${esc(r.title)}</div><div class="global-result-sub">${esc(r.sub)}</div></div></div>`).join('');
   res.classList.add('show');
@@ -1023,7 +1062,7 @@ function globalSearch(q){
 function hideGlobalResults(){document.getElementById('global-results').classList.remove('show')}
 
 // ═══════════════════════════════════════
-//  NOTES
+//  NOTES RENDER
 // ═══════════════════════════════════════
 function renderCatFilter(){
   document.getElementById('cat-filter').innerHTML=["Todas",...CATEGORIES].map(c=>
@@ -1076,10 +1115,10 @@ function renderNotes(){
         <span class="note-author">👤 ${esc(n.author||'—')}</span>
         <div class="note-stats"><span style="${myVote?'color:var(--blue)':''}">👍 ${votes}</span><span>💬 ${comments}</span></div>
         <div class="note-card-actions" onclick="event.stopPropagation()">
-          <button class="icon-btn${isFav?' fav-active':''}" title="Favorito" onclick="toggleFav('${n.id}')">⭐</button>
-          <button class="icon-btn" title="${n.pinned?'Desfijar':'Fijar'}" onclick="togglePin('${n.id}')">${n.pinned?'📌':'📍'}</button>
-          <button class="icon-btn" title="Editar" onclick="editNote('${n.id}')">✏️</button>
-          ${isLider?`<button class="icon-btn delete" title="Eliminar" onclick="deleteNote('${n.id}')">🗑️</button>`:''}
+          <button class="icon-btn${isFav?' fav-active':''}" onclick="toggleFav('${n.id}')">⭐</button>
+          <button class="icon-btn" onclick="togglePin('${n.id}')">${n.pinned?'📌':'📍'}</button>
+          <button class="icon-btn" onclick="editNote('${n.id}')">✏️</button>
+          ${isLider?`<button class="icon-btn delete" onclick="deleteNote('${n.id}')">🗑️</button>`:''}
         </div>
       </div>
     </div>`;
@@ -1091,8 +1130,7 @@ function renderNotes(){
 // ═══════════════════════════════════════
 function toggleFav(id){
   if(favorites.has(id))favorites.delete(id);else favorites.add(id);
-  lsSave(LS.favs,[...favorites]);
-  renderNotes();
+  lsSave(LS.favs,[...favorites]);renderNotes();
   showToast(favorites.has(id)?'⭐ Agregado a favoritos':'Quitado de favoritos');
 }
 
@@ -1111,10 +1149,24 @@ function openDetail(id){
   const histArr=(note.history||[]).slice().reverse().slice(0,10);
   const histHtml=histArr.map(h=>`<div class="history-entry"><span class="history-who">${esc(h.who)}</span><span>${esc(h.action)} · ${fmtDT(h.date)}</span></div>`).join('');
   const linksHtml=(note.links||[]).filter(l=>l.url).map(l=>`<div class="note-link-item">🔗 <a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label||l.url)}</a></div>`).join('');
-  const approvalBar=isLider&&note.status==='pendiente'?`<div class="approval-bar"><span class="approval-bar-text">⏳ Esta nota está pendiente de tu aprobación</span><div style="display:flex;gap:6px"><button class="btn-xs success" onclick="approveNote('${id}');closeDetail()">✅ Aprobar</button><button class="btn-xs danger" onclick="rejectNote('${id}');closeDetail()">❌ Rechazar</button></div></div>`:'';
+  const approvalBar=isLider&&note.status==='pendiente'
+    ?`<div class="approval-bar"><span class="approval-bar-text">⏳ Pendiente de tu aprobación</span><div style="display:flex;gap:6px"><button class="btn-xs success" onclick="approveNote('${id}');closeDetail()">✅ Aprobar</button><button class="btn-xs danger" onclick="rejectNote('${id}');closeDetail()">❌ Rechazar</button></div></div>`:'';
+
+  // Reassign author section (leader only)
+  const teamNames=Object.values(teamUsers||{}).map(u=>u.name).filter(Boolean).sort();
+  const reassignHtml=isLider?`
+    <div class="reassign-bar">
+      <label>✏️ Cambiar autor:</label>
+      <select class="reassign-select" id="reassign-select-${id}">
+        ${teamNames.map(n=>`<option value="${esc(n)}"${n===note.author?' selected':''}>${esc(n)}</option>`).join('')}
+      </select>
+      <button class="btn-xs primary" onclick="reassignAuthor('${id}')">Guardar</button>
+    </div>`:'';
+
   document.getElementById('detail-breadcrumb').textContent=note.category+' · '+fmtDate(note.date);
   document.getElementById('note-detail-body').innerHTML=`
     ${approvalBar}
+    ${reassignHtml}
     <div><span class="note-cat-badge" style="background:${col.bg};color:${col.color}">${esc(note.category)}</span><span class="status-badge ${st.cls}">${st.label}</span>${note.pinned?' 📌':''}</div>
     <div class="note-detail-title">${esc(note.title)}</div>
     <div class="note-detail-meta"><span>👤 ${esc(note.author||'—')}</span><span>📅 ${fmtDate(note.date)}</span>${isNew(note.date)?'<span style="background:var(--green-bg);color:var(--green);padding:2px 8px;border-radius:20px;font-weight:600;font-size:11px">Nuevo</span>':''}</div>
@@ -1123,7 +1175,7 @@ function openDetail(id){
     ${linksHtml?`<div class="note-links"><div class="note-links-title">🔗 Links útiles</div>${linksHtml}</div>`:''}
     <div class="vote-row">
       <button class="vote-btn${myVote?' voted':''}" onclick="toggleVote('${id}')">👍 <span>${votes.length}</span> ${myVote?'¡Útil!':'Me resultó útil'}</button>
-      <button class="icon-btn${isFav?' fav-active':''}" onclick="toggleFav('${id}')" title="Favorito">⭐</button>
+      <button class="icon-btn${isFav?' fav-active':''}" onclick="toggleFav('${id}')">⭐</button>
     </div>
     <div class="comments-section">
       <div class="comments-title">💬 Comentarios (${commentsArr.length})</div>
@@ -1140,9 +1192,32 @@ function openDetail(id){
   addMyHistory('👁️',`Viste la nota "${note.title}"`);
   document.getElementById('note-detail-modal').style.display='flex';
 }
+
 function closeDetail(){document.getElementById('note-detail-modal').style.display='none'}
 function editFromDetail(){closeDetail();editNote(detailNoteId)}
 
+// ═══════════════════════════════════════
+//  REASSIGN AUTHOR
+// ═══════════════════════════════════════
+function reassignAuthor(noteId){
+  const sel=document.getElementById('reassign-select-'+noteId);
+  if(!sel)return;
+  const newAuthor=sel.value;
+  const note=notes[noteId];if(!note)return;
+  const oldAuthor=note.author;
+  note.author=newAuthor;
+  dbSet('notes/'+noteId+'/author',newAuthor);
+  addHistory(noteId,`Cambió el autor de "${oldAuthor}" a "${newAuthor}"`);
+  logActivity('Reasignó autor de nota',`${note.title}: ${oldAuthor} → ${newAuthor}`);
+  addMyHistory('👥',`Reasignaste el autor de "${note.title}" a ${newAuthor}`);
+  showToast(`Autor cambiado a ${newAuthor} ✓`);
+  // refresh detail
+  openDetail(noteId);
+}
+
+// ═══════════════════════════════════════
+//  VOTE & COMMENTS & HISTORY
+// ═══════════════════════════════════════
 function toggleVote(id){
   const note=notes[id];if(!note)return;
   if(!note.votes)note.votes={};
@@ -1152,25 +1227,21 @@ function toggleVote(id){
   showToast(note.votes[currentUser]?'👍 ¡Útil!':'Voto quitado');
   openDetail(id);
 }
-
 function addComment(noteId){
   const input=document.getElementById('new-comment-'+noteId);
   const text=input?.value.trim();if(!text){showToast('⚠️ Escribí algo');return}
   const note=notes[noteId];if(!note)return;
   if(!note.comments)note.comments={};
-  const cid=lid();
-  note.comments[cid]={author:currentUser,text,date:nowISO()};
+  const cid=lid();note.comments[cid]={author:currentUser,text,date:nowISO()};
   dbSet('notes/'+noteId+'/comments',note.comments);
-  addHistory(noteId,'Comentó la nota');
-  logActivity('Comentó una nota',note.title);
+  addHistory(noteId,'Comentó la nota');logActivity('Comentó una nota',note.title);
   addMyHistory('💬',`Comentaste en "${note.title}"`);
   showToast('Comentario agregado ✓');openDetail(noteId);
 }
 function deleteComment(noteId,cid){
   if(!confirm('¿Eliminás este comentario?'))return;
   const note=notes[noteId];if(!note)return;
-  delete note.comments[cid];
-  dbSet('notes/'+noteId+'/comments',note.comments);
+  delete note.comments[cid];dbSet('notes/'+noteId+'/comments',note.comments);
   showToast('Eliminado');openDetail(noteId);
 }
 function addHistory(noteId,action){
@@ -1213,8 +1284,7 @@ function editNote(id){
   statusEl.value=note.status||'vigente';
   document.getElementById('note-body').value=note.body;
   document.getElementById('note-pin').checked=!!note.pinned;
-  document.getElementById('tag-input').value='';
-  renderTagsList();renderLinksList();
+  document.getElementById('tag-input').value='';renderTagsList();renderLinksList();
   document.getElementById('note-modal').style.display='flex';
 }
 function closeNoteForm(){document.getElementById('note-modal').style.display='none'}
@@ -1237,18 +1307,14 @@ function saveNote(){
   if(editingNoteId){
     const note=notes[editingNoteId];
     Object.assign(note,{title,category:cat,status:isLider?status:'pendiente',body,tags:[...currentTags],links,pinned,date:today()});
-    addHistory(editingNoteId,'Editó la nota');
-    dbSet('notes/'+editingNoteId,note);
-    logActivity('Editó una nota',title);
-    addMyHistory('✏️',`Editaste la nota "${title}"`);
-    showToast('Nota actualizada ✓');
+    addHistory(editingNoteId,'Editó la nota');dbSet('notes/'+editingNoteId,note);
+    logActivity('Editó una nota',title);addMyHistory('✏️',`Editaste la nota "${title}"`);showToast('Nota actualizada ✓');
   }else{
     const id=lid();
     const finalStatus=isLider?status:'pendiente';
     const nn={id,title,category:cat,status:finalStatus,body,author:currentUser,tags:[...currentTags],links,pinned,date:today(),votes:{},comments:{},history:[{who:currentUser,action:'Creó la nota',date:nowISO()}]};
     notes[id]=nn;dbSet('notes/'+id,nn);
-    logActivity('Creó una nota',title);
-    addMyHistory('📝',`Creaste la nota "${title}"`);
+    logActivity('Creó una nota',title);addMyHistory('📝',`Creaste la nota "${title}"`);
     showToast(isLider?'Nota creada ✓':'Nota enviada para aprobación ✓');
   }
   closeNoteForm();updatePendingBanner();
@@ -1256,18 +1322,14 @@ function saveNote(){
 function deleteNote(id){
   if(!isLider){showToast('Solo el líder puede eliminar notas');return}
   if(!confirm('¿Eliminás esta nota?'))return;
-  const note=notes[id];
-  addMyHistory('🗑️',`Eliminaste la nota "${note?.title||id}"`);
-  logActivity('Eliminó una nota',note?.title||id);
+  const note=notes[id];addMyHistory('🗑️',`Eliminaste "${note?.title||id}"`);logActivity('Eliminó una nota',note?.title||id);
   delete notes[id];dbRemove('notes/'+id);showToast('Nota eliminada');
 }
 function togglePin(id){
   const note=notes[id];if(!note)return;
   if(!isLider){showToast('Solo el líder puede fijar notas');return}
-  note.pinned=!note.pinned;
-  addHistory(id,note.pinned?'Fijó la nota':'Desfijó la nota');
-  dbSet('notes/'+id+'/pinned',note.pinned);
-  showToast(note.pinned?'Nota fijada 📌':'Nota desfijada');
+  note.pinned=!note.pinned;addHistory(id,note.pinned?'Fijó la nota':'Desfijó la nota');
+  dbSet('notes/'+id+'/pinned',note.pinned);showToast(note.pinned?'Nota fijada 📌':'Nota desfijada');
 }
 
 // ═══════════════════════════════════════
@@ -1277,34 +1339,24 @@ function updatePendingBanner(){
   const pending=Object.values(notes||{}).filter(n=>n.status==='pendiente');
   const banner=document.getElementById('pending-banner');
   if(isLider&&pending.length){banner.style.display='flex';document.getElementById('pending-count').textContent=pending.length}
-  else{banner.style.display='none'}
+  else banner.style.display='none';
 }
 function approveNote(id){
   const note=notes[id];if(!note)return;
-  note.status='vigente';
-  addHistory(id,'Aprobó la nota');
-  dbSet('notes/'+id+'/status','vigente');
-  dbSet('notes/'+id+'/history',note.history);
-  logActivity('Aprobó una nota',note.title);
-  addMyHistory('✅',`Aprobaste la nota "${note.title}"`);
-  showToast('✅ Nota aprobada y publicada');
-  renderLeaderPanel();updatePendingBanner();
+  note.status='vigente';addHistory(id,'Aprobó la nota');
+  dbSet('notes/'+id+'/status','vigente');dbSet('notes/'+id+'/history',note.history);
+  logActivity('Aprobó una nota',note.title);addMyHistory('✅',`Aprobaste "${note.title}"`);
+  showToast('✅ Nota aprobada');renderLeaderPanel();updatePendingBanner();
 }
 function rejectNote(id){
   const reason=prompt('¿Por qué rechazás esta nota?');if(reason===null)return;
   const note=notes[id];if(!note)return;
-  note.status='revision';
-  if(!note.comments)note.comments={};
-  const cid=lid();
-  note.comments[cid]={author:currentUser,text:'🔴 Rechazada: '+reason,date:nowISO()};
+  note.status='revision';if(!note.comments)note.comments={};
+  const cid=lid();note.comments[cid]={author:currentUser,text:'🔴 Rechazada: '+reason,date:nowISO()};
   addHistory(id,'Rechazó la nota: '+reason);
-  dbSet('notes/'+id+'/status','revision');
-  dbSet('notes/'+id+'/comments',note.comments);
-  dbSet('notes/'+id+'/history',note.history);
-  logActivity('Rechazó una nota',note.title);
-  addMyHistory('❌',`Rechazaste la nota "${note.title}"`);
-  showToast('Nota enviada a revisión');
-  renderLeaderPanel();updatePendingBanner();
+  dbSet('notes/'+id+'/status','revision');dbSet('notes/'+id+'/comments',note.comments);dbSet('notes/'+id+'/history',note.history);
+  logActivity('Rechazó una nota',note.title);addMyHistory('❌',`Rechazaste "${note.title}"`);
+  showToast('Nota enviada a revisión');renderLeaderPanel();updatePendingBanner();
 }
 
 // ═══════════════════════════════════════
@@ -1359,36 +1411,59 @@ function renderLeaderPanel(){
   const allNotes=Object.values(notes||{});
   const pending=allNotes.filter(n=>n.status==='pendiente');
   const vigentes=allNotes.filter(n=>n.status==='vigente');
-  const authors=[...new Set(allNotes.map(n=>n.author).filter(Boolean))];
+  const teamCount=Object.keys(teamUsers||{}).length;
   document.getElementById('leader-stats').innerHTML=[
     {num:allNotes.length,label:'Notas totales',color:'var(--blue)'},
     {num:vigentes.length,label:'Vigentes',color:'var(--green)'},
     {num:pending.length,label:'Pendientes',color:'var(--amber)'},
-    {num:authors.length,label:'Colaboradores',color:'#3C3489'},
+    {num:teamCount,label:'Equipo',color:'#3C3489'},
   ].map(s=>`<div class="leader-stat"><div class="leader-stat-num" style="color:${s.color}">${s.num}</div><div class="leader-stat-label">${s.label}</div></div>`).join('');
 
   const pendingEl=document.getElementById('leader-pending');
-  if(!pending.length){pendingEl.innerHTML='<p style="font-size:13px;color:var(--text4);padding:.5rem 0">Todo aprobado ✅</p>'}
-  else{pendingEl.innerHTML=pending.map(n=>`<div class="leader-pending-item"><div><div class="leader-pending-title">${esc(n.title)}</div><div class="leader-pending-meta">👤 ${esc(n.author)} · ${esc(n.category)} · ${fmtDate(n.date)}</div></div><div style="display:flex;gap:6px"><button class="btn-xs" onclick="openDetail('${n.id}')">Ver</button><button class="btn-xs success" onclick="approveNote('${n.id}')">✅ Aprobar</button><button class="btn-xs danger" onclick="rejectNote('${n.id}')">❌ Rechazar</button></div></div>`).join('')}
+  if(!pending.length)pendingEl.innerHTML='<p style="font-size:13px;color:var(--text4);padding:.5rem 0">Todo aprobado ✅</p>';
+  else pendingEl.innerHTML=pending.map(n=>`<div class="leader-pending-item"><div><div class="leader-pending-title">${esc(n.title)}</div><div class="leader-pending-meta">👤 ${esc(n.author)} · ${esc(n.category)} · ${fmtDate(n.date)}</div></div><div style="display:flex;gap:6px"><button class="btn-xs" onclick="openDetail('${n.id}')">Ver</button><button class="btn-xs success" onclick="approveNote('${n.id}')">✅ Aprobar</button><button class="btn-xs danger" onclick="rejectNote('${n.id}')">❌ Rechazar</button></div></div>`).join('');
 
   renderUsersPanel();
 }
 
 // ═══════════════════════════════════════
-//  USERS & ROLES PANEL
+//  USERS PANEL — solo equipo cargado manualmente
 // ═══════════════════════════════════════
+function toggleAddUserForm(){
+  const el=document.getElementById('add-user-form');
+  el.style.display=el.style.display==='none'?'block':'none';
+  if(el.style.display==='block'){
+    document.getElementById('new-user-name').value='';
+    document.getElementById('new-user-email').value='';
+  }
+}
+
+function addTeamUser(){
+  const name=document.getElementById('new-user-name').value.trim();
+  const email=document.getElementById('new-user-email').value.trim().toLowerCase();
+  const role=document.getElementById('new-user-role').value;
+  if(!name||!email){showToast('⚠️ Completá nombre y email');return}
+  if(!email.includes('@')){showToast('⚠️ Email inválido');return}
+  const key=btoa(email);
+  if(teamUsers[key]){showToast('⚠️ Este usuario ya existe');return}
+  const newUser={email,name,role,addedAt:today()};
+  teamUsers[key]=newUser;
+  dbSet('team_users/'+key,newUser);
+  logActivity('Agregó usuario al equipo',`${name} (${email})`);
+  addMyHistory('👥',`Agregaste a ${name} al equipo`);
+  toggleAddUserForm();
+  renderUsersPanel();
+  showToast(`${name} agregado al equipo ✓`);
+}
+
 function renderUsersPanel(){
   const el=document.getElementById('leader-users');
   const now=nowTS();
-  // gather all known users: from roles + from presence
-  const allUsers={};
-  Object.values(usersRoles||{}).forEach(u=>{allUsers[u.email]={email:u.email,name:u.name||u.email,role:u.role||'colaborador'}});
-  // also add presence users not yet in roles
-  Object.values(presenceData||{}).forEach(u=>{
-    if(!allUsers[u.email])allUsers[u.email]={email:u.email,name:u.name,role:'colaborador'};
-  });
-  const users=Object.values(allUsers);
-  if(!users.length){el.innerHTML='<p style="font-size:13px;color:var(--text4);padding:.5rem 0">Aún no hay usuarios registrados.</p>';return}
+  const users=Object.values(teamUsers||{}).sort((a,b)=>a.name.localeCompare(b.name));
+  if(!users.length){
+    el.innerHTML='<p style="font-size:13px;color:var(--text4);padding:.5rem 0">Aún no hay usuarios. Hacé clic en "+ Agregar usuario" para empezar.</p>';
+    return;
+  }
   el.innerHTML=users.map(u=>{
     const online=Object.values(presenceData||{}).some(p=>p.email===u.email&&p.ts&&(now-p.ts)<PRESENCE_TIMEOUT);
     const isMe=u.email===currentEmail;
@@ -1403,17 +1478,28 @@ function renderUsersPanel(){
         <option value="colaborador"${u.role==='colaborador'?' selected':''}>Colaborador</option>
         <option value="lider"${u.role==='lider'?' selected':''}>Líder</option>
       </select>
+      ${!isMe?`<button class="btn-xs danger" onclick="removeTeamUser('${esc(u.email)}','${esc(u.name)}')" title="Eliminar del equipo">✕</button>`:''}
     </div>`;
   }).join('');
 }
 
 function changeUserRole(email,name,newRole){
   const key=btoa(email);
-  const current=usersRoles[key]||{};
-  dbSet('roles/'+key,{...current,email,name,role:newRole});
-  showToast(`Rol de ${name} actualizado a ${newRole} ✓`);
+  const user=teamUsers[key]||{};
+  dbSet('team_users/'+key,{...user,email,name,role:newRole});
+  logActivity('Cambió rol',`${name} → ${newRole}`);
   addMyHistory('👥',`Cambiaste el rol de ${name} a ${newRole}`);
-  logActivity('Cambió rol de usuario',`${name} → ${newRole}`);
+  showToast(`Rol de ${name} → ${newRole} ✓`);
+}
+
+function removeTeamUser(email,name){
+  if(!confirm(`¿Eliminás a ${name} del equipo? Seguirá pudiendo entrar hasta que desactives su cuenta en Firebase.`))return;
+  const key=btoa(email);
+  delete teamUsers[key];
+  dbRemove('team_users/'+key);
+  logActivity('Eliminó usuario del equipo',name);
+  renderUsersPanel();
+  showToast(`${name} eliminado del equipo`);
 }
 
 function renderLeaderActivity(activityData){
@@ -1440,7 +1526,7 @@ function renderGallery(){
 function openGalleryForm(){galleryFileData=null;populateCatSelects();['gallery-file-input','gallery-title','gallery-desc'].forEach(id=>document.getElementById(id).value='');document.getElementById('gallery-cat-select').value=CATEGORIES[0];document.getElementById('gallery-preview').style.display='none';document.getElementById('gallery-upload-zone').style.display='block';document.getElementById('gallery-form-modal').style.display='flex'}
 function closeGalleryForm(){document.getElementById('gallery-form-modal').style.display='none'}
 function previewGalleryFile(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{galleryFileData=e.target.result;const prev=document.getElementById('gallery-preview');prev.src=galleryFileData;prev.style.display='block';document.getElementById('gallery-upload-zone').style.display='none';if(!document.getElementById('gallery-title').value)document.getElementById('gallery-title').value=file.name.replace(/\.[^.]+$/,'');};reader.readAsDataURL(file)}
-function saveGalleryItem(){if(!galleryFileData){showToast('⚠️ Elegí una imagen');return}const title=document.getElementById('gallery-title').value.trim()||'Sin título';const desc=document.getElementById('gallery-desc').value.trim();const cat=document.getElementById('gallery-cat-select').value;const id=lid();gallery[id]={id,src:galleryFileData,title,desc,cat,author:currentUser,date:today()};dbSet('gallery/'+id,gallery[id]);addMyHistory('🖼️',`Subiste la imagen "${title}"`);logActivity('Subió una imagen',title);closeGalleryForm();showToast('Imagen subida ✓')}
+function saveGalleryItem(){if(!galleryFileData){showToast('⚠️ Elegí una imagen');return}const title=document.getElementById('gallery-title').value.trim()||'Sin título';const desc=document.getElementById('gallery-desc').value.trim();const cat=document.getElementById('gallery-cat-select').value;const id=lid();gallery[id]={id,src:galleryFileData,title,desc,cat,author:currentUser,date:today()};dbSet('gallery/'+id,gallery[id]);addMyHistory('🖼️',`Subiste "${title}"`);logActivity('Subió una imagen',title);closeGalleryForm();showToast('Imagen subida ✓')}
 function openGalleryEdit(id){const item=gallery[id];if(!item)return;editingGalleryId=id;populateCatSelects();document.getElementById('gallery-edit-preview').src=item.src;document.getElementById('gallery-edit-title').value=item.title||'';document.getElementById('gallery-edit-desc').value=item.desc||'';document.getElementById('gallery-edit-cat').value=item.cat||CATEGORIES[0];document.getElementById('gallery-edit-modal').style.display='flex'}
 function closeGalleryEdit(){document.getElementById('gallery-edit-modal').style.display='none'}
 function saveGalleryEdit(){const item=gallery[editingGalleryId];if(!item)return;item.title=document.getElementById('gallery-edit-title').value.trim()||'Sin título';item.desc=document.getElementById('gallery-edit-desc').value.trim();item.cat=document.getElementById('gallery-edit-cat').value;dbSet('gallery/'+editingGalleryId,item);closeGalleryEdit();showToast('Actualizado ✓')}
@@ -1456,9 +1542,7 @@ function showLightboxItem(){const item=gallery[lightboxIds[lightboxIdx]];if(!ite
 function defaultNotes(){
   const n={};
   [{id:'n1',title:"Procedimiento de escalamiento",category:"Procedimientos",body:"1. Verificar que el cliente esperó más de 72hs.\n2. Abrir ticket con prioridad media.\n3. Notificar al supervisor.\n4. Registrar en sistema.",status:"vigente",tags:["escalamiento"],pinned:true,date:today(),author:"Equipo",votes:{},comments:{},history:[],links:[]},
-   {id:'n2',title:"Documentación de alta de cuenta",category:"Documentación",body:"Formularios necesarios:\n- DNI del titular\n- Constancia de CUIL\n- Comprobante de domicilio",status:"vigente",tags:["alta"],pinned:false,date:today(),author:"Equipo",votes:{},comments:{},history:[],links:[]},
-   {id:'n3',title:"Límites de depósito",category:"Depósitos",body:"Efectivo en sucursal: hasta $500.000\nTransferencia: sin límite\nCajero: hasta $200.000",status:"vigente",tags:["límites"],pinned:false,date:today(),author:"Equipo",votes:{},comments:{},history:[],links:[]},
-   {id:'n4',title:"Proceso de retiro anticipado",category:"Retiros",body:"1. Verificar identidad.\n2. Completar formulario F-22.\n3. Calcular penalidad.\n4. Aprobación supervisor > $100.000.",status:"vigente",tags:["retiro"],pinned:false,date:today(),author:"Equipo",votes:{},comments:{},history:[],links:[]},
+   {id:'n2',title:"Límites de depósito",category:"Depósitos",body:"Efectivo en sucursal: hasta $500.000\nTransferencia: sin límite\nCajero: hasta $200.000",status:"vigente",tags:["límites"],pinned:false,date:today(),author:"Equipo",votes:{},comments:{},history:[],links:[]},
   ].forEach(note=>{n[note.id]=note});
   return n;
 }
@@ -1472,7 +1556,8 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
-    ['ann-modal','ann-form-modal','note-modal','note-detail-modal','gallery-form-modal','gallery-edit-modal','fav-modal','hist-modal'].forEach(id=>document.getElementById(id).style.display='none');
+    ['ann-modal','ann-form-modal','note-modal','note-detail-modal','gallery-form-modal','gallery-edit-modal','fav-modal','hist-modal']
+      .forEach(id=>document.getElementById(id).style.display='none');
     closeLightbox();
     document.getElementById('bell-panel').classList.remove('open');
     document.getElementById('profile-panel').classList.remove('open');
